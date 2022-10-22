@@ -10,7 +10,9 @@
         }
         slideIndex++;
         if (slideIndex > slides.length) {slideIndex = 1}
-        slides[slideIndex-1].style.display = "block";
+        if (slideIndex-1) {
+            slides[slideIndex-1].style.display = "block";//just modified to fix some bugs
+        }
         setTimeout(showSlides, 3000); // Change image every 3 seconds
     }
 

@@ -1,134 +1,73 @@
 <script setup lang="ts">
     import offer from './Offer.vue';
     import router from '@/router';
-    const gotoProductDetails = () => {
-        router.push({ path: '/productDetails' });
+    import { ref, onMounted } from 'vue';
+    import {storeToRefs } from "pinia";
+    import {useSoftStore} from "../stores/soft-store";
+    import  moment from "moment";
+
+    const softStore = useSoftStore();
+    const {setTableName, getUserId, parseCurrency, create, read, readAll, del, delAll, exists} = useSoftStore();
+    const {apiUrl,isAdmin, clientPath,projectName, user, categoryArr, allProducts, _offer} = storeToRefs(softStore);
+    
+    const selectedVal = ref("All");
+    const products = ref([]);
+
+    const categoryChanged = (e) => {
+        selectedVal.value = e.target.value;
+        if (e.target.value == "All") {
+            products.value = allProducts.value;
+        } 
+        else if (e.target.value == "Recent") {
+            products.value = allProducts.value.filter((product) => ((moment(new Date()).diff(moment(product.date),'days')) <= 3));
+        }
+        else {
+            products.value = allProducts.value.filter((result) => result.category == e.target.value);
+        }
     }
+    const search = (e) => {
+        var key = e.target.value.toLowerCase();
+        products.value = allProducts.value.filter(p => (p.name.toLowerCase().includes(key)) || (p.searchKey.toLowerCase().includes(key)));
+    }
+    onMounted(() => {
+        products.value = allProducts.value;
+    })
 </script>
 <template>
     <div>
         
                 <!--featured products-->
     <div class="small-container">
-        <div class="title">Recent Products</div>
+        <div class="title">{{selectedVal}} Products</div>
         <div class="row-3">
             <p>Select by Category</p>
-            <select>
-                <option value="Computers">Computers</option>
-                <option value="Phones">Phones</option>
-                <option value="Computers">Computers</option>
-                <option value="Phones">Phones</option>
-                <option value="Computers">Computers</option>
-                <option value="Phones">Phones</option>
+            <select @change="categoryChanged($event)" v-if="categoryArr.length">
+                <option value="All">All</option>
+                <option value="Recent">Most Recent</option>
+                <option v-for="c in categoryArr" :key="c" :value="c">{{c}}</option>
             </select>
             <div class="search">
-                <input type="text" placeholder="search">
+                <input v-on:keyup="search" type="text" placeholder="search for products">
                 <i class="fa fa-search" ></i>
             </div>
         </div>
 
-        <div class="row">
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-1.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
-            </div>
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-2.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
-            </div>
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-3.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
-            </div>
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-4.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
+        <div class="row productImg">
+            <div v-for="product in products" :key="product.id" class="col-4">
+                <router-link  :to="{name : 'productDetails', params:{id: product.id}}" >
+                    <img :src="product.imageUrl" alt="product-1">
+                    <h4>{{product.name}}</h4>
+                    <div v-if="product.isNew" class="rating" v-for="i in 5" :key="i">
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <div v-else class="rating" v-for="j in 3" :key="j">
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <p>{{parseCurrency(product.price)}}</p>
+                </router-link>
             </div>
         </div>
 
-        <h2 class="title">All Products</h2>
-        <div class="row">
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-5.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
-            </div>
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-6.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
-            </div>
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-7.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
-            </div>
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-8.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
-            </div>
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-9.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
-            </div>
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-10.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
-            </div>
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-11.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
-            </div>
-            <div @click="gotoProductDetails" class="col-4">
-                <img src="../images/product-12.jpg" alt="product-1">
-                <h4>Red Printed T-shirt</h4>
-                <div class="rating" v-for="i in 5" :key="i">
-                    <i class="fa fa-star"></i>
-                </div>
-                <p>N 2,500</p>
-            </div>
-        </div>
 
         <div class="page-btn">
             <span>1</span>
@@ -139,8 +78,8 @@
         </div>
     </div>
 
-    <div>
-        <offer/>
+    <div v-if="_offer">
+        <offer :offer="_offer"/>
     </div>
 
     </div>

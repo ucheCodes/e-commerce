@@ -12,3 +12,7 @@ app.use(createPinia());
 app.use(router);
 
 app.mount("#app");
+//to get the $router available all through the components
+// router.isReady().then(()=>{
+//     app.mount("#app"); 
+// });
