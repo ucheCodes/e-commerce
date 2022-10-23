@@ -91,11 +91,11 @@
     <div class="small-container single-product" v-if="product">
         <div class="row">
             <div class="col-2">
-                <img :src="product.imageUrl" :alt="product.id">
+                <img :src="product.imageUrl" alt="product">
 
                 <div class="small-img-row">
                     <div class="small-img-col" v-for="i in 4" :key="i">
-                        <img :src="product.imageUrl" :alt="product.id">
+                        <img :src="product.imageUrl" alt="product">
                     </div>
                 </div>
             </div>
@@ -125,7 +125,7 @@
         </div>
         <div class="row">
             <div @click="setAsProduct(rel)" class="col-4" v-for="rel in related">
-                <img :src="rel.imageUrl" :alt="rel.id">
+                <img :src="rel.imageUrl" alt="image">
                 <h4>{{rel.name}}</h4>
                 <div v-if="rel.isNew" class="rating" v-for="i in 5" :key="i">
                     <i class="fa fa-star"></i>

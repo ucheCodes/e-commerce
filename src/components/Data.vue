@@ -27,7 +27,7 @@
         const addCategory = (e) =>{
             e.preventDefault();
             if (category.value) {
-                create("Category",category.value,category.value);//may make it lower and upper case
+                create("Category",category.value.toLowerCase(),category.value.toLowerCase());
                 categoryArr.value.push(category.value);
                 alert("New category field added")
             } else {
@@ -36,17 +36,17 @@
         }
         const setAdmin = (e) => {
             e.preventDefault();
-            if ((password1.value == password2.value) && user.value != "" && username.value != "") {
+            if ((password1.value == password2.value) && user.value && username.value != "") {
                 if ((password1.value && password2.value) == "$admin") {
                     var admin = {
                         username : username.value,
                         id : user.value
                     };
-                    create("Admin",user.value,admin);
+                    create("Admin",user.value,admin).then(res => console.log(res.data));
                 }
             }
             else{
-                alert("password fields must be the same");
+               alert("password fields must match and username valid");
             }
         }
 
@@ -82,8 +82,6 @@
            axios.post(apiUrl.value+"file",formData, {headers : {"content-type":"multipart/form-data"}})
            .then(
             response => {
-               // console.log(`${response.data.filepath} \n ${response.data.fileByte}`);
-            
                 if (response.data.filepath.slice(response.data.filepath.length - 4,response.data.filepath.length) ==".jpg") {
                     imageUrl.value = "data:image/jpeg;base64,"+response.data.fileByte;
                     filepath.value = response.data.filepath;
@@ -171,14 +169,12 @@
                     productName.value = "";productDesc.value = "";productPrice.value = 0;mobile.value = "";
                     searchKey.value = "";filepath.value = ""; imageUrl.value= "";
                 }
-                //console.log(`${select_upload.options[select_upload.selectedIndex].value} ${select_upload.options[select_upload.selectedIndex].text}`);
             }
             else{
                 alert("all input fields must be filled accordingly");
             }
         }
         onMounted(() => {
-         //   console.log("is admin? "+isAdmin.value);
         });
 </script>
 

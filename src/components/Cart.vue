@@ -89,7 +89,7 @@
             <tr v-for="item in cart" :key="item.id">
                 <td>
                     <div class="cart-info">
-                        <img :src="item.imageUrl" :alt="item.id">
+                        <img :src="item.imageUrl" alt="image">
                         <div>
                             <p>{{item.name}}</p>
                             <small>{{parseCurrency(item.price)}}</small><br>

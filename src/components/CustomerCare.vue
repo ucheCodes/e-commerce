@@ -65,6 +65,7 @@
     const getChats = (userId : string) => {
         readAll("Chats").then(
             response => {
+            if (Array.isArray(response.data) && response.data.length) {
               response.data.forEach(_chat => {
                   var chat = JSON.parse(_chat.value);
                   //console.log(chat);
@@ -73,6 +74,7 @@
                     chats.value.push(chat);
                  }   
               });
+            }
               if (chats.value.length) {
                 chats.value.sort(function (x ,y) {
                     const a : any = new Date(x.date);
@@ -87,12 +89,14 @@
     const getChatList = () => {
         readAll("ChatList").then(
                     response => {
+                    if (Array.isArray(response.data) && response.data.length) {
                         response.data.forEach(u => {
                             var id = JSON.parse(u.value).id;
                             chatList.value = chatList.value.filter(c => c.id != id);
                             chatList.value = [...chatList.value, JSON.parse(u.value)];
                             // console.log(JSON.parse(u.value));
                      });
+                    }
                     }
         );
     }
@@ -102,11 +106,13 @@
         getChats(id);
             //clear chat count when admin open chats
         read("ChatList",id).then(
-                response => {
+            response => {
+                    if (response.data.value) {
                     var data = (JSON.parse(response.data.value));
                     data.count = 0;
                     create("ChatList",id,data);
                 }
+            }
         );
     }
     const updateChats = () => {

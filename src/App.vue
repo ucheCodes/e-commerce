@@ -34,21 +34,19 @@ import {useSoftStore} from "./stores/soft-store";
     getAllOrders();
     getChats();
 
-    // encrypt("Encryption","paystack",{ // just comment this out when ready
-    //         public_key : paystack_public_key.value,
-    //         secret_key : paystack_secret_key.value,
-    //         id : "b14ca5898a4e4133bbce2ea2315a1916"
-    //     }).then(r => console.log(r.data));
-
+    /*encrypt("Encryption","paystack",{ // just comment this out when ready
+            public_key : paystack_public_key.value,
+            secret_key : paystack_secret_key.value,
+            id : "b14ca5898a4e4133bbce2ea2315a1916"
+        }).then(r => console.log(r.data));*/
 
     decrypt("Encryption","paystack").then( 
       response => {
           paystack_public_key.value = response.data.public_key;
           paystack_secret_key.value = response.data.secret_key;
       }
-    ); 
+    );
     });
-    console.log("Now that I am ready for production, I need to make sure I add and delete my secret keys immediately my server is deployed.")
 
   //create paystack inline popup element
     const popup = document.createElement('script');
@@ -63,7 +61,6 @@ import {useSoftStore} from "./stores/soft-store";
                 <div class="logo">
                     <span class="txt">Peter's Soft</span>
                     <span><i class='fa fa-shopping-cart'></i></span>
-                    <span class="txt">Cart</span>                 
                 </div>
                 <nav>
                     <ul @click="menuToggle" id="menuItems">

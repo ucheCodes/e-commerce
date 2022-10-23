@@ -110,7 +110,7 @@
                             <td data-label="Time">{{moment(product.date).format('LT')}}</td>
                             <td @click="edit(product)" data-label="Edit"><button class="btn">Edit</button></td>
                             <td @click="_delete(product.id, product.filepath)" data-label="Delete"><button class="btn">Delete</button></td>
-                            <td data-label="Photo"><img :src="product.imageUrl" :alt="product.id"></td>
+                            <td data-label="Photo"><img :src="product.imageUrl" alt="product"></td>
                           </tr>
                         </tbody>
                       </table>

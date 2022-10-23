@@ -5,9 +5,9 @@ import { v4 as uuid } from "uuid";
 
 export const useSoftStore = defineStore("soft-store", () => {
   const projectName = ref("Peter's Soft Digital Store-");
-  const apiUrl = ref("https://localhost:7164/api/");
-  const serverPath = ref("https://localhost:7164/");
-  const clientPath = ref("http://127.0.0.1:5173/");
+  const apiUrl = ref("https://softdb.com.ng/api/");
+  const serverPath = ref("https://softdb.com.ng/");
+  const clientPath = ref("https://peters-soft-store.netlify.app/");
   const user = ref<string>("");
   const isAdmin = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
@@ -45,10 +45,11 @@ export const useSoftStore = defineStore("soft-store", () => {
   const getAllCategory = () => {
     readAll("Category").then(
         response => {
+          if (Array.isArray(response.data)) {
             response.data.forEach(element => {
-                //console.log(`${JSON.parse(element.key)} : ${element.value}`);
-                categoryArr.value.push(JSON.parse(element.key));
-            });
+              categoryArr.value.push(JSON.parse(element.key));
+          });
+          }
         }
     );
 }
@@ -56,20 +57,22 @@ export const useSoftStore = defineStore("soft-store", () => {
 const getAllProducts = () => {
   readAll("Products").then(
     response => {
-      response.data.forEach(element => {
-        //console.log(`${JSON.parse(element.key)} : ${element.value}`);
-        allProducts.value.push(JSON.parse(element.value));
-    });
+      if (Array.isArray(response.data) && response.data.length) {
+        response.data.forEach(element => {
+          allProducts.value.push(JSON.parse(element.value));
+        });
+      }
     }
   )
 }
 const getAllOrders = () => {
   readAll("Orders").then(
     response => {
-      response.data.forEach(element => {
-        //console.log(`${JSON.parse(element.key)} : ${element.value}`);
-        orders.value.push(JSON.parse(element.value));
-    });
+      if (Array.isArray(response.data) && response.data.length) {
+        response.data.forEach(element => {
+          orders.value.push(JSON.parse(element.value));
+        });
+      }
     }
   )
 }
@@ -77,25 +80,31 @@ const getAllOrders = () => {
 const getOffer = () => {
   read("Offer","offer").then(
     response => {
-      _offer.value = JSON.parse(response.data.value)
+      if (response.data.value) {
+        _offer.value = JSON.parse(response.data.value);
+      }
     }
   );
 }
 const getAllOffers = () => {
   readAll("Offers").then(
     response => {
+      if (Array.isArray(response.data) && response.data.length) {
       response.data.forEach(element => {
         offers.value.push(JSON.parse(element.value));
-    });
+      });
+    }
     }
   )
 }
 const getLogistics = () => {
   readAll("Logistics").then(
     response => {
-      response.data.forEach(element => {
-        logistics.value.push(JSON.parse(element.value));
-    });
+      if (Array.isArray(response.data) && response.data.length) {
+        response.data.forEach(element => {
+          logistics.value.push(JSON.parse(element.value));
+        });
+     }
     }
   );
 }
@@ -129,11 +138,11 @@ const getLogistics = () => {
   const getChats = () => {
     readAll("Chats").then(
       response => {
-       if (response.data.length) {
-        rawChats.value = [];
-        response.data.forEach(chat => {
-          rawChats.value = [...rawChats.value, JSON.parse(chat.value)];
-        });
+       if (Array.isArray(response.data) && response.data.length) {
+          rawChats.value = [];
+          response.data.forEach(chat => {
+            rawChats.value = [...rawChats.value, JSON.parse(chat.value)];
+          });
        }
       } 
    );
