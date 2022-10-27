@@ -5,7 +5,8 @@ import { v4 as uuid } from "uuid";
 
 export const useSoftStore = defineStore("soft-store", () => {
   const projectName = ref("Peter's Soft Digital Store-");
-  const apiUrl = ref("https://softdb.com.ng/api/");
+  //const apiUrl = ref("https://softdb.com.ng/api/");
+  const apiUrl = ref("https://localhost:7164/api/");
   const serverPath = ref("https://softdb.com.ng/");
   const clientPath = ref("https://peters-soft-store.netlify.app/");
   const user = ref<string>("");

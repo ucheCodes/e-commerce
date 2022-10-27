@@ -188,7 +188,7 @@
                     <div class="title-div">
                         <span><i class="fa fa-phone"> +234 7087051250</i></span><br>
                         <span><i class="fa fa-whatsapp"> +234 8181734574 </i></span><br>
-                        <span><i class="fa fa-envelope"> uchevictor610@gmail.com</i></span><br>
+                        <span><i class="fa fa-envelope"> peters.soft.network@gmail.com</i></span><br>
                     </div>
                     <div class="form-container">
                         <div v-if="isAdmin" class="messages" v-for="chat in chats" :key="chat.id">

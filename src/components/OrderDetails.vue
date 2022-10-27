@@ -2,6 +2,7 @@
     import {onMounted,ref} from "vue";
     import {storeToRefs } from "pinia";
     import {useSoftStore} from "../stores/soft-store";
+    import router from "@/router";
 
     const softStore = useSoftStore();
     const { parseCurrency, create, read, readAll, del, delAll, verifyTrans} = useSoftStore();
@@ -17,10 +18,16 @@
         });
         return total;
     }
+    const goToOrders = () =>{
+        router.push('/orders');
+    }
     onMounted(() => {
         if (props.orders) {
            _orders.value =  JSON.parse(props.orders);
            subTotal();
+        }
+        else{
+            router.push('/home');
         }
     });
 </script>
@@ -28,7 +35,7 @@
     <div>
 
             <!--Order Details Page-->
-    <div class="small-container cart-page">
+    <div class="small-container cart-page" v-if="_orders">
         <table>
             <tr>
                 <th>Product</th>
@@ -71,6 +78,9 @@
             <!-- <router-link class="btn" to="/paymentInfo"><i class="fa fa-arrow-left"></i>Details</router-link> -->
             <router-link class="btn" to="/orders"><i class="fa fa-arrow-left"></i>Orders</router-link>
         </div>
+    </div>
+    <div v-else>
+        <button @click="goToOrders" class="btn">Back to Orders</button>
     </div>
     </div>
 </template>

@@ -103,9 +103,14 @@
                 <p>Product / {{product.name}} </p>
                 <h1>{{product.name}}</h1>
                 <h4>{{parseCurrency(product.price)}}</h4>
-                <input min="1" v-model="quantity" type="number">
-                <button @click="addToCart(product)" class="btn">Add to Cart</button>
-                <button @click="buy(product)" class="btn">Buy Now</button>
+                <div v-if="product.category != 'luxury'">
+                    <input min="1" v-model="quantity" type="number">
+                    <button @click="addToCart(product)" class="btn">Add to Cart</button>
+                    <button @click="buy(product)" class="btn">Buy Now</button>
+                </div>
+                <div v-else  class="luxury">
+                    <h3>Make Enquiry  <a href="https://api.whatsapp.com/send?phone=2348181734574"><i class="fa fa-whatsapp"></i></a></h3>
+                </div>
                 <h3>Product Description <i class="fa fa-indent"></i></h3><br>
                 <p>{{product.desc}}</p>
                 <div class="btns" v-if="isAdmin">
@@ -136,6 +141,9 @@
                 <p>{{parseCurrency(rel.price)}}</p>
             </div>
         </div>
+    </div>
+    <div v-else>
+        <button @click="toProducts" class="btn">View Products</button>
     </div>
 
     </div>

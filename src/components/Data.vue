@@ -133,7 +133,7 @@
             var select_upload = document.getElementById("select-upload") as HTMLSelectElement;
             var select_state = document.getElementById("select-state") as HTMLSelectElement;
 
-            if (select_state.options[select_upload.selectedIndex].value == "new"){
+            if (select_state.options[select_state.selectedIndex].value == "new"){
                 isNew.value = true;
             }
             if (productName.value && productPrice.value && productDesc.value && mobile.value && searchKey.value) {
@@ -154,6 +154,14 @@
                     alert("select database upload path : Offer or Products")
                 } 
                 else if (select_upload.options[select_upload.selectedIndex].value == "products")  {
+                    create("Products",product.id,product).then(response => alert(response.data));
+
+                    allProducts.value = [...allProducts.value,product]
+                    productName.value = "";productDesc.value = "";productPrice.value = 0;mobile.value = "";
+                    searchKey.value = "";filepath.value = ""; imageUrl.value= "";
+                }
+                else if (select_upload.options[select_upload.selectedIndex].value == "luxury")  {
+                    product.category = "luxury";
                     create("Products",product.id,product).then(response => alert(response.data));
 
                     allProducts.value = [...allProducts.value,product]
@@ -206,6 +214,7 @@
                                     <option value="default">Upload data to :</option>
                                     <option value="offers">Offers</option>
                                     <option value="products">Products</option>
+                                    <option value="luxury">Luxury</option>
                                 </select>
                                 <select id="select-state">
                                     <option value="default">Product state :</option>
@@ -226,6 +235,7 @@
                                 <input v-model="mobile" type="text" placeholder="affiliate's Mobile contact">
                                 <select id="select-cat" v-if="categoryArr.length">
                                     <option value="default">Select Category</option>
+                                    <option value="luxury">Luxury</option>
                                     <option v-for="c in categoryArr" :key="c" :value="c">{{c}}</option>
                                 </select>
                                 <input v-model="searchKey" type="text" placeholder="Add search parameter / sub - category">
@@ -237,6 +247,7 @@
                                     <option value="default">Upload data to :</option>
                                     <option value="offers">Offers</option>
                                     <option value="products">Products</option>
+                                    <option value="luxury">Luxury</option>
                                 </select>
                                 <select id="select-state">
                                     <option value="default">Product state :</option>

@@ -8,10 +8,25 @@
 
     const softStore = useSoftStore();
     const {setTableName, getUserId, parseCurrency, create, read, readAll, del, delAll, exists} = useSoftStore();
-    const {apiUrl,isAdmin, clientPath,projectName, user, categoryArr, allProducts, _offer} = storeToRefs(softStore);
+    const {apiUrl,isAdmin, clientPath,projectName, user, categoryArr, _offer} = storeToRefs(softStore);
     
+    const allProducts = ref([]);
     const selectedVal = ref("All");
     const products = ref([]);
+    const _products = ref([]);
+    const luxury = ref([]);
+    const _luxury = ref([]);
+    const luxuryStart = ref<number>(0);
+    const luxuryEnd = ref<number>(4);
+    const luxuryIncrement = 4;
+    const luxuryCount = ref<number>(0);
+    const luxurySubDiv = ref<number>();
+
+    const productStart = ref<number>(0);
+    const productEnd = ref<number>(8);
+    const productIncrement = 8;
+    const productCount = ref<number>(0);
+    const productSubDiv = ref<number>();
 
     const categoryChanged = (e) => {
         selectedVal.value = e.target.value;
@@ -29,14 +44,158 @@
         var key = e.target.value.toLowerCase();
         products.value = allProducts.value.filter(p => (p.name.toLowerCase().includes(key)) || (p.searchKey.toLowerCase().includes(key)));
     }
+    const getProducts = () => {
+        if (allProducts.value) {
+             _products.value = allProducts.value.filter(p => p.category != 'luxury');
+            _luxury.value = allProducts.value.filter(p => p.category == 'luxury'); 
+            trimProducts(_products.value, productStart.value, productEnd.value,'forward');        
+            trimLuxury(_luxury.value, luxuryStart.value, luxuryEnd.value,'forward');        
+        }
+    }
+    const trimProducts = (product : any, start : number, end : number, direction : string) => {
+        products.value = [];
+        if (product.length > productIncrement) {
+            productSubDiv.value = Math.floor(product.length/productIncrement);
+            const modulo = product.length % productIncrement;
+            if(modulo > 0) {
+                productSubDiv.value += 1
+            } 
+
+            if (start < 0) {
+                start = product.length - productIncrement;
+                end = product.length;
+                productStart.value = product.length - productIncrement;
+                productEnd.value = product.length; 
+            }
+            else if (end > product.length){
+                start = 0;
+                end = productIncrement;
+                productStart.value = 0;
+                productEnd.value = productIncrement; 
+            }
+            if (direction == 'forward') {
+                productStart.value += productIncrement;
+                productEnd.value += productIncrement; 
+                if (productCount.value < productSubDiv.value) {
+                    productCount.value++;
+                }
+                else{productCount.value = 1;}
+            }
+            else{
+                productStart.value -= productIncrement;
+                productEnd.value -= productIncrement;
+                if (productCount.value > 1) {
+                    productCount.value--;
+                }
+                else{productCount.value = productSubDiv.value;}
+            }
+            for (let i = start; i < end; i++) {
+                products.value.push(product[i]);           
+            }
+
+        }
+        else{
+            products.value = product;
+        }
+    }
+    const trimLuxury = (product : any, start : number, end : number, direction : string) => {
+        luxury.value = [];
+        if (product.length > luxuryIncrement) {
+            luxurySubDiv.value = Math.floor(product.length/luxuryIncrement);
+            const modulo = product.length % luxuryIncrement;
+            if(modulo > 0) {
+                luxurySubDiv.value += 1
+            } 
+
+            if (start < 0) {
+                start = product.length - luxuryIncrement;
+                end = product.length;
+                luxuryStart.value = product.length - luxuryIncrement;
+                luxuryEnd.value = product.length; 
+            }
+            else if (end > product.length){
+                start = 0;
+                end = luxuryIncrement;
+                luxuryStart.value = 0;
+                luxuryEnd.value = luxuryIncrement; 
+            }
+            if (direction == 'forward') {
+                luxuryStart.value += luxuryIncrement;
+                luxuryEnd.value += luxuryIncrement; 
+                if (luxuryCount.value < luxurySubDiv.value) {
+                    luxuryCount.value++;
+                }
+                else{luxuryCount.value = 1;}
+            }
+            else{
+                luxuryStart.value -= luxuryIncrement;
+                luxuryEnd.value -= luxuryIncrement;
+                if (luxuryCount.value > 1) {
+                    luxuryCount.value--;
+                }
+                else{luxuryCount.value = luxurySubDiv.value;}
+            }
+            for (let i = start; i < end; i++) {
+                luxury.value.push(product[i]);           
+            }
+
+        }
+        else{
+           luxury.value = product;
+           luxurySubDiv.value = 0;
+        }
+    }
+
+    const getAllProducts = () => {
+        readAll("Products").then(
+            response => {
+            if (Array.isArray(response.data) && response.data.length) {
+                response.data.forEach(element => {
+                allProducts.value.push(JSON.parse(element.value));
+                });
+            };
+            if (allProducts.value.length) {
+                allProducts.value.sort(function (x ,y) {
+                    const a : any = new Date(x.date);
+                    const b : any = new Date(y.date);
+                    return b - a;
+                });
+             }
+            getProducts();
+            }
+        )
+    }
     onMounted(() => {
-        products.value = allProducts.value;
+        getAllProducts();
     })
 </script>
 <template>
-    <div>
+<div>
         
                 <!--featured products-->
+    <div class="small-container">
+        <div class="title">Luxury Goods</div>
+        <div class="row"  v-if="luxury.length">
+            <div v-for="product in luxury" :key="product.id" class="col-4">
+                <router-link  :to="{name : 'productDetails', params:{id: product.id}}" >
+                    <img :src="product.imageUrl" alt="product-1">
+                    <h4>{{product.name}}</h4>
+                    <div v-if="product.isNew" class="rating" v-for="i in 5" :key="i">
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <div v-else class="rating" v-for="j in 3" :key="j">
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <p>{{parseCurrency(product.price)}} per gram</p>
+                </router-link>
+            </div>
+        </div>
+        <div class="page-btn" v-if="luxurySubDiv">
+                <span @click="trimLuxury(_luxury, luxuryStart,luxuryEnd,'backward')">&#8592;</span>
+                <label for="x">{{luxuryCount}} / {{luxurySubDiv}}</label>
+                <span @click="trimLuxury(_luxury, luxuryStart,luxuryEnd,'forward')">&#8594;</span>
+        </div>
+    </div>            
     <div class="small-container">
         <div class="title">{{selectedVal}} Products</div>
         <div class="row-3">
@@ -67,14 +226,10 @@
                 </router-link>
             </div>
         </div>
-
-
-        <div class="page-btn">
-            <span>1</span>
-            <span>2</span>
-            <span>3</span>
-            <span>4</span>
-            <span>&#8594;</span>
+        <div v-if="productSubDiv" class="page-btn">
+                <span @click="trimProducts(_products, productStart,productEnd,'backward')">&#8592;</span>
+                <label for="x">{{productCount}} / {{productSubDiv}}</label>
+                <span @click="trimProducts(_products, productStart,productEnd,'forward')">&#8594;</span>
         </div>
     </div>
 
@@ -82,5 +237,5 @@
         <offer :offer="_offer"/>
     </div>
 
-    </div>
+</div>
 </template>
