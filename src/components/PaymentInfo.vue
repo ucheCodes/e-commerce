@@ -3,6 +3,7 @@
     import { onMounted, ref } from "vue";
     import {storeToRefs} from "pinia";
     import {useSoftStore} from "../stores/soft-store";
+    import SpinnerVue from "./Spinner.vue";
 
     const softStore = useSoftStore();
     const {verifyTrans, parseCurrency, KoboToNaira} = useSoftStore();
@@ -82,9 +83,14 @@
                       </tr> 
                     </tbody>
                   </table>
+                  <div>
+                    <router-link to="/products">
+                        <button class="btn">Shop Now</button>
+                    </router-link>
+                  </div>
             </div>
             <div v-else>
-              <p>No response generated yet. If this persists refresh and confirm you are still connected to the Inernet.</p>
+              <SpinnerVue/>
             </div>
     </div>
 </div>

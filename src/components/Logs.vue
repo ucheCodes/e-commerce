@@ -5,6 +5,8 @@
     import {storeToRefs } from "pinia";
     import {useSoftStore} from "../stores/soft-store";
     import  moment from "moment";
+    import  SpinnerVue from './Spinner.vue';
+
 
     const softStore = useSoftStore();
     const {setTableName, getUserId, parseCurrency, create, read, readAll, del, delAll, exists} = useSoftStore();
@@ -56,7 +58,7 @@
 <template>
     <div>
         
-    <div class="container">
+    <div class="container" v-if="logistics.length">
         <div class="row">
             <h2 class="title">Logistics Orders</h2>
             <div class="col-1">
@@ -116,6 +118,9 @@
             </div>
         </div>
     </div>
+    </div>
+    <div v-else>
+        <SpinnerVue/>
     </div>
 
     </div>

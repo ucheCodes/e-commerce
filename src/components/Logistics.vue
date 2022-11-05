@@ -108,11 +108,17 @@
                         <img src="../images/log3.jpg" style="width:100%">
                         </div>
                         <div class="mySlides fade">
-                        <img src="../images/log4.jpg" style="width:100%">
+                        <img src="../images/home4.jpeg" style="width:100%">
+                        </div>
+                        <div class="mySlides fade">
+                        <img src="../images/home5.jpeg" style="width:100%">
                         </div>
                     
                         <div class="mySlides fade">
-                        <img src="../images/log5.jpg" style="width:100%">
+                        <img src="../images/home6.jpeg" style="width:100%">
+                        </div>
+                        <div class="mySlides fade">
+                        <img src="../images/home7.jpeg" style="width:100%">
                         </div>
                     </div>
                 </div>

@@ -22,12 +22,13 @@
         router.push('/orders');
     }
     onMounted(() => {
+        var x = false;
         if (props.orders) {
            _orders.value =  JSON.parse(props.orders);
            subTotal();
         }
         else{
-            router.push('/home');
+            router.push('/');
         }
     });
 </script>

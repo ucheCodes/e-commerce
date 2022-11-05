@@ -40,7 +40,7 @@
         const totalToKobo = subtotal.value * 100;
         const apiStatus = "200";
         var id = uuid();
-        if (isEmailValid() && customerMobile.value) {
+        if (isEmailValid() && isMobileValid(customerMobile.value)) {
             if (confirm(`${parseCurrency(subtotal.value)} will be debited from your bank`)) {
                 const payStackObj = {
                     email : email.value,
@@ -68,6 +68,12 @@
       const regex = /\S+@\S+\.\S+/ // this is just a simple check
 
       return email.value && email.value.length > 0 && regex.test(email.value)
+    }
+    const isMobileValid = (mobile : string) => {
+        if ((mobile.length > 11 && mobile.includes('+')) || mobile.length == 11) {
+           return true
+        }
+        return false;
     }
     onMounted(() => {
         if (cart.value.length) {
@@ -127,7 +133,14 @@
             </div>
         </div>
     </div>
-    <div v-else>No item in cart</div>
+    <div v-else class="text-center">
+        <p>No item in cart</p>
+        <div>
+            <router-link to="/products">
+                <button class="btn">Shop Now</button>
+            </router-link>
+        </div>
+    </div>
     <div v-if="_offer">
         <offer :offer="_offer"/>
     </div>

@@ -6,10 +6,11 @@
   import {useSoftStore} from "../stores/soft-store";
   import  moment from "moment";
   import axios from "axios";
+  import SpinnerVue from './Spinner.vue';
 
   const softStore = useSoftStore();
   const {setTableName, getUserId, parseCurrency, create, read, readAll, del, delAll, exists} = useSoftStore();
-  const {apiUrl,isAdmin, clientPath,projectName, user, categoryArr, allProducts, _offer, _edit} = storeToRefs(softStore);
+  const {apiUrl,isAdmin, clientPath,projectName, user, categoryArr, allProducts, _offer, _edit, commision, vat} = storeToRefs(softStore);
 
   const selectedVal = ref("All");
   const param = ref("");
@@ -24,6 +25,9 @@
         }
         else if (e.target.value == "name") {
           products.value = allProducts.value.filter(result => result.name.toLowerCase().includes(param.value.toLowerCase()));
+        }
+        else if (e.target.value == "id") {
+          products.value = allProducts.value.filter(result => result.id.includes(param.value.toLowerCase()));
         }
         else {
             products.value = allProducts.value.filter((result) => result.category == e.target.value);
@@ -68,13 +72,83 @@
             }).catch(error => console.error(error));
           }
       }
+
+    const inflate = () => {
+      var select_inflate = document.getElementById("select-inflate") as HTMLSelectElement;
+      if (confirm(`do you really want to inflate ${select_inflate.options[select_inflate.selectedIndex].value} products by 20%`)) {
+        if (select_inflate.options[select_inflate.selectedIndex].value == 'all') {
+            allProducts.value.forEach(p => {
+              if (((moment(new Date()).diff(moment(p.date),'days')) >= 30)) {
+                p.date = new Date();
+                p.price += (0.2 * p.price);
+                create("Products",p.id,p);
+              }
+            });
+            alert("price modification success");   
+        } else if (select_inflate.options[select_inflate.selectedIndex].value == 'normal') {
+            allProducts.value.forEach(p => {
+              if (((moment(new Date()).diff(moment(p.date),'days')) >= 30) && p.category != 'luxury') {
+                p.date = new Date();
+                p.price += (0.2 * p.price);
+                create("Products",p.id,p);
+              }
+            }); 
+            alert("price modification success");        
+      }
+      else if (select_inflate.options[select_inflate.selectedIndex].value == 'luxury') {
+            allProducts.value.forEach(p => {
+              if (((moment(new Date()).diff(moment(p.date),'days')) >= 30) && p.category == 'luxury') {
+                p.date = new Date();
+                p.price += (0.2 * p.price);
+                create("Products",p.id,p);
+              }
+            });
+            alert("price modification success");          
+      }
+      else if (select_inflate.options[select_inflate.selectedIndex].value == 'gold') {
+            allProducts.value.forEach(p => {
+              if (((moment(new Date()).diff(moment(p.date),'days')) >= 30) && p.category == 'luxury' && p.name.toLowerCase().includes('gold')) {//make 30
+                p.date = new Date();
+                p.price += (0.2 * p.price);
+                create("Products",p.id,p);
+              }
+            });
+            alert("price modification success");         
+      }
+      else if (select_inflate.options[select_inflate.selectedIndex].value == 'non gold') {
+            allProducts.value.forEach(p => {
+              if (((moment(new Date()).diff(moment(p.date),'days')) >= 30) && p.category == 'luxury' && !p.name.toLowerCase().includes('gold')) {//make 30
+                p.date = new Date();
+                p.price += (0.2 * p.price);
+                create("Products",p.id,p);
+              }
+            });   
+            alert("price modification success");   
+      }
+    }
+    }
   </script>
 
 <template>
-    <div>
+<div>
        
-    <div class="container">
-        <div class="row">
+   <div class="container" v-if="allProducts.length">
+      <div class="row">
+          <div class="col-1">
+              <h2 class="title">Automatic Price Inflation</h2>
+              <p class="red">Please do not tamper with this section except you are authorized to do so</p>
+              <div class="row-3">
+                    <p>Inflate Prices by ...</p>
+                    <select id="select-inflate">
+                      <option value="all">All</option>
+                      <option value="normal">Normal</option> 
+                      <option value="luxury">Luxury</option>                  
+                      <option value="gold">Gold</option>
+                      <option value="non gold">Non Gold</option>                   
+                    </select>
+                    <button @click="inflate" class="btn">inflate</button>
+                </div>
+           </div>
             <h2 class="title">All Uploaded Products</h2>
             <div class="col-1">
                 <div class="row-3">
@@ -83,6 +157,7 @@
                       <option value="All">All</option>
                       <option value="Recent">Most Recent</option>
                       <option value="name">Product's Name</option>                   
+                      <option value="id">Product's Id</option>                   
                       <option v-for="c in categoryArr" :key="c" :value="c">{{c}}</option>
                     </select>
                     <input v-model="param" type="text" placeholder="filter parameter">
@@ -94,6 +169,7 @@
                           <th>Product Id</th>
                           <th>Product Name</th>
                           <th>Unit Price</th>
+                          <th>Original Price</th>
                           <th>Date</th>
                           <th>Time</th>
                           <th>Edit</th>
@@ -106,6 +182,7 @@
                             <td data-label="Product Id">{{product.id.substring(0,5)}} ... {{product.id.substring(product.id.length-5,product.id.length)}}</td>
                             <td data-label="Product Name">{{product.name}}</td>
                             <td data-label="Unit Price">{{parseCurrency(product.price)}}</td>
+                            <td data-label="Original Price">{{parseCurrency(product.price - ((commision + vat) * product.price))}}</td>
                             <td data-label="Date">{{moment(product.date).format('ll')}}</td>
                             <td data-label="Time">{{moment(product.date).format('LT')}}</td>
                             <td @click="edit(product)" data-label="Edit"><button class="btn">Edit</button></td>
@@ -117,7 +194,10 @@
                 </div>
             </div>
         </div>
+  </div>
+  <div v-else>
+        <SpinnerVue/>
     </div>
 
-    </div>
+</div>
 </template>

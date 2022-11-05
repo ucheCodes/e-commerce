@@ -36,6 +36,11 @@ nav ul li:hover{
   font-size: 20px;
   color: var(--white);
 }
+.red{
+  color: red;
+  padding: 2px;
+  text-align: center;
+}
 .cart-icon{
   width: 30px;
   height: 30px;
@@ -57,6 +62,10 @@ nav ul li:hover{
   color : var(--main);
   margin: 0 5px;
   font-size: 1.8rem;
+}
+.text-center{
+  text-align: center;
+  margin: 30px 0;
 }
 .btns{
   display : flex;
@@ -135,6 +144,7 @@ p{
 }
 .btn:hover{
   background: var(--main2);
+  cursor: pointer;
 }
 .header{
   background: radial-gradient(var(--white),var(--main));
@@ -199,6 +209,10 @@ p{
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
+}
+.flex{
+  display: flex;
+  justify-content: space-between;
 }
 h4{
   font-weight: normal;
@@ -605,7 +619,38 @@ form a{
   to {opacity: 1}
 }
 
+/* loading spinner styles var(--white)*/
+@keyframes spinner {
+  0% {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
 
+.spinner{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 30px 0;
+}
+.spin::before{
+  animation: 1.5s linear infinite spinner;
+  animation-play-state: inherit;
+  border: solid 5px gray;
+  border-bottom-color: var(--main);
+  border-radius: 50%;
+  content: "";
+  height: 40px;
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  transform: translate3d(-50%,-50%,0);
+  width: 40px;
+  will-change: transform;
+  margin: 60px 0;
+}
 
 
 

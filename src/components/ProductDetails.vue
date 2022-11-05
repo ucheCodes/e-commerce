@@ -21,6 +21,7 @@
     }
     const setAsProduct = (_product : {}) => {
         product.value = _product;
+        scrollIntoDiv();
     }
     const _delete = (id : string, filepath : any) => {
     if(confirm("This product will be deleted permanently")){
@@ -76,16 +77,23 @@
     const toProducts = () => {
         router.push('/products')
     }
+    function scrollIntoDiv() {
+        var elem = document.getElementById('top') as HTMLDivElement;
+        elem.scrollIntoView();
+    }
     onMounted(() => {
         if (props.id) {
             product.value = find(allProducts.value,props.id);
             getRelated();
+            setTimeout(() => {
+                scrollIntoDiv();
+            }, 3000);
         }
     });
 </script>
 
 <template>
-    <div>
+    <div id="top">
 
             <!--Product Details Page-->
     <div class="small-container single-product" v-if="product">
@@ -107,6 +115,7 @@
                     <input min="1" v-model="quantity" type="number">
                     <button @click="addToCart(product)" class="btn">Add to Cart</button>
                     <button @click="buy(product)" class="btn">Buy Now</button>
+                    <h3>More Enquiry  <a href="https://api.whatsapp.com/send?phone=2348181734574"><i class="fa fa-whatsapp"></i></a></h3><br>
                 </div>
                 <div v-else  class="luxury">
                     <h3>Make Enquiry  <a href="https://api.whatsapp.com/send?phone=2348181734574"><i class="fa fa-whatsapp"></i></a></h3>
@@ -142,7 +151,7 @@
             </div>
         </div>
     </div>
-    <div v-else>
+    <div v-else class="text-center">
         <button @click="toProducts" class="btn">View Products</button>
     </div>
 

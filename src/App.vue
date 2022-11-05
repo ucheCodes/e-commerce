@@ -28,7 +28,6 @@ import {useSoftStore} from "./stores/soft-store";
     getUserId();
     getAllCategory();
     getAllProducts();
-    getOffer();
     getAllOffers();
     getLogistics();
     getAllOrders();

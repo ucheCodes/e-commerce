@@ -28,7 +28,7 @@
             e.preventDefault();
             if (category.value) {
                 create("Category",category.value.toLowerCase(),category.value.toLowerCase());
-                categoryArr.value.push(category.value);
+                categoryArr.value.push(category.value.toLowerCase());
                 alert("New category field added")
             } else {
                 alert("category field can not be empty.")

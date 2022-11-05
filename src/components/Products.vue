@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import offer from './Offer.vue';
+    import SpinnerVue from './Spinner.vue';
     import router from '@/router';
     import { ref, onMounted } from 'vue';
     import {storeToRefs } from "pinia";
@@ -8,7 +9,7 @@
 
     const softStore = useSoftStore();
     const {setTableName, getUserId, parseCurrency, create, read, readAll, del, delAll, exists} = useSoftStore();
-    const {apiUrl,isAdmin, clientPath,projectName, user, categoryArr, _offer} = storeToRefs(softStore);
+    const {apiUrl,isAdmin, clientPath,projectName, user, categoryArr, _offer, cart} = storeToRefs(softStore);
     
     const allProducts = ref([]);
     const selectedVal = ref("All");
@@ -146,6 +147,18 @@
         }
     }
 
+    const addToCart = (product : any) => {
+        var filtered = cart.value.filter(p => p.id == product.id);
+        if (filtered.length) {
+            alert("This product is already in your cart");
+        }
+        else{
+            product = {...product, quantity : 1};
+            cart.value = [...cart.value,product];
+            alert(product.name+" added to cart.")
+        }
+    }
+
     const getAllProducts = () => {
         readAll("Products").then(
             response => {
@@ -171,7 +184,8 @@
 </script>
 <template>
 <div>
-        
+  
+    <div v-if="luxury.length || products.length">
                 <!--featured products-->
     <div class="small-container">
         <div class="title">Luxury Goods</div>
@@ -179,6 +193,10 @@
             <div v-for="product in luxury" :key="product.id" class="col-4">
                 <router-link  :to="{name : 'productDetails', params:{id: product.id}}" >
                     <img :src="product.imageUrl" alt="product-1">
+                    <div class="flex">
+                        <small>{{moment(product.date).format('ll')}}</small>
+                        <small>{{moment(product.date).format('LT')}}</small>
+                    </div>
                     <h4>{{product.name}}</h4>
                     <div v-if="product.isNew" class="rating" v-for="i in 5" :key="i">
                         <i class="fa fa-star"></i>
@@ -186,7 +204,8 @@
                     <div v-else class="rating" v-for="j in 3" :key="j">
                         <i class="fa fa-star"></i>
                     </div>
-                    <p>{{parseCurrency(product.price)}} per gram</p>
+                    <p v-if="product.name.toLowerCase().includes('gold') || product.name.toLowerCase().includes('cuban') || product.name.toLowerCase().includes('karat')">{{parseCurrency(product.price)}} per gram</p>
+                    <p v-else>{{parseCurrency(product.price)}}</p>
                 </router-link>
             </div>
         </div>
@@ -197,7 +216,7 @@
         </div>
     </div>            
     <div class="small-container">
-        <div class="title">{{selectedVal}} Products</div>
+        <div class="title">{{selectedVal}} products</div>
         <div class="row-3">
             <p>Select by Category</p>
             <select @change="categoryChanged($event)" v-if="categoryArr.length">
@@ -211,10 +230,14 @@
             </div>
         </div>
 
-        <div class="row productImg">
+        <div class="row productImg" v-if="products.length">
             <div v-for="product in products" :key="product.id" class="col-4">
                 <router-link  :to="{name : 'productDetails', params:{id: product.id}}" >
                     <img :src="product.imageUrl" alt="product-1">
+                    <div class="flex">
+                        <small>{{moment(product.date).format('ll')}}</small>
+                        <small>{{moment(product.date).format('LT')}}</small>
+                    </div>
                     <h4>{{product.name}}</h4>
                     <div v-if="product.isNew" class="rating" v-for="i in 5" :key="i">
                         <i class="fa fa-star"></i>
@@ -224,13 +247,25 @@
                     </div>
                     <p>{{parseCurrency(product.price)}}</p>
                 </router-link>
+                <div>
+                    <button @click="addToCart(product)" class="btn">Add to cart</button>
+                </div>
             </div>
+        </div>
+        <div v-else class="text-center">
+            <p> No Product found in this category, kindly change selection.</p>
         </div>
         <div v-if="productSubDiv" class="page-btn">
                 <span @click="trimProducts(_products, productStart,productEnd,'backward')">&#8592;</span>
                 <label for="x">{{productCount}} / {{productSubDiv}}</label>
                 <span @click="trimProducts(_products, productStart,productEnd,'forward')">&#8594;</span>
         </div>
+    </div>
+
+    </div>
+
+    <div v-else>
+        <SpinnerVue/>
     </div>
 
     <div v-if="_offer">

@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import router from "../router";
+    import SpinnerVue from "./Spinner.vue";
 
     const props = defineProps<{
         offer : any
     }>();
-
     const gotoProductDetails = (id : string) => {
      router.push({ path: '/productDetails/'+id });
     }
@@ -13,10 +13,10 @@
 <template>
     <div>
 
-            <!--offers-->
+            <!--offers props.offer.id-->
     <div class="offer">
-        <div class="small-container">
-            <h2 class="title">Special Offer</h2>
+        <div class="small-container" v-if="props.offer.id">
+            <h2 class="title">Exclusive Offer</h2>
             <div class="row" @click="gotoProductDetails(props.offer.id)">
                 <div class="col-2">
                     <img :src="props.offer.imageUrl" :alt="props.offer.id" class="offer-img">
@@ -30,6 +30,5 @@
             </div>
         </div>
     </div>
-
     </div>
 </template>

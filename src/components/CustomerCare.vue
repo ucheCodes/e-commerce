@@ -8,7 +8,7 @@
     import moment from "moment";
 
     const softStore = useSoftStore();
-    const {setTableName, getUserId, parseCurrency, create, read, readAll, del, delAll, exists} = useSoftStore();
+    const {setTableName, getUserId, parseCurrency, create, read, readAll, del, delAll, exists, sendEmail} = useSoftStore();
     const {apiUrl, clientPath,projectName, user, isAdmin, categoryArr, allProducts, _offer,rawChats} = storeToRefs(softStore);
 
     const message = ref<string>("");
@@ -26,6 +26,8 @@
                     id : uuid()
                 };
                 create("Chats",msg.id,msg).then(response => chats.value.push(msg));
+                   /* .then(response => 
+                    {scrollIntoDiv()});*/
 
             } else {
                 var msg = {
@@ -39,6 +41,11 @@
                 create("Chats",msg.id,msg).then(response => {
                     message.value = "";
                     chats.value.push(msg);
+                    var body = `<p> Customer with user id ${msg.sender} 
+                    sent a message on ${moment(new Date()).format('ll')} :
+                     ${moment(new Date()).format('LT')}. <br> <a href="https://peterstore.vercel.app/">click here to reply message on the site </a> </p>`;
+                    sendEmail("uchefavourchika@gmail.com",msg.id,"New Message on Peter's Soft Store", body);
+                    //scrollIntoDiv();
                 });
                 read("ChatList",msg.sender).then(
                     response => {
@@ -129,6 +136,10 @@
                 getChats(user.value);
             }
         }
+    }
+    function scrollIntoDiv() {
+        var elem = document.getElementById('chat-bottom') as HTMLDivElement;
+        elem.scrollIntoView();
     }
 
     onMounted(() => {

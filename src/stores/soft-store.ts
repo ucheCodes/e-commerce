@@ -19,11 +19,12 @@ export const useSoftStore = defineStore("soft-store", () => {
   const logistics = ref([]as any);
   const _offer = ref({} as any);
   const cart = ref([] as any);
-  const vat = ref(0.05);
-  const commision = ref(0.1);
+  const vat = ref(0.02);
+  const commision = ref(0.05);
   const _edit = ref({} as any);
   const rawChats = ref([]);
   const paystack_url = ref("");
+  const fromEmail = ref("peters.soft.network@gmail.com");
   const paystack_public_key = ref("");
   const paystack_secret_key = ref("");
 
@@ -248,6 +249,11 @@ const makePayment = (data : any) => {
         if (response.status == "success") {
           create("Orders",data.ref,orderInfo).then(response => alert(`We can't thrive without you. Thank you so much \n ${response.data}`));
           cart.value = [];
+          //call email sending api here
+          var body = `<p>Thank you for patronizing us, We really appreciate your patronage on our platform. Thank you. <br> Your transaction with reference Id
+          ${reference} is well received. <br> <a href="https://peterstore.vercel.app/">click here to Explore More Content From Peter's 
+          Soft Digital Store</a> </p> <br> <br> <a href="https://api.whatsapp.com/send?phone=2349063809830">Chat with our customer care representative</a>`;
+          sendEmail(data.email,reference,"Peter's Soft Digital Store", body);
         }
       },
       onClose: function() {
@@ -269,11 +275,24 @@ const makePayment = (data : any) => {
         })
       }
  }
+ const sendEmail = (toEmail : string, referenceId : string, subject : string, body : string) => {
+  axios.post(apiUrl.value+'email',{
+    ToEmail : toEmail,
+    FromEmail : fromEmail.value,
+    SubJect : subject,
+    Body : body
+  });/*.then(
+    response => {
+      alert(response.data);
+    }
+  );*/
+}
+
   return { 
     projectName, apiUrl, serverPath,clientPath, user, isAdmin, categoryArr, allProducts,_offer,cart,
      offers,logistics, commision, vat,orders, _edit, rawChats,isLoading, paystack_public_key, paystack_secret_key,
       paystack_url,
        verifyTrans, setTableName, parseCurrency, nairaToKobo, KoboToNaira, getAllCategory, getChats, getAllProducts,getAllOrders, getOffer,getLogistics, getAllOffers, getUserId, create, 
-      read, readAll, del, delAll, exists, find,makePayment, encrypt, decrypt
+      read, readAll, del, delAll, exists, find,makePayment, encrypt, decrypt, sendEmail
   };
 });

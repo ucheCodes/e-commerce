@@ -7,9 +7,10 @@
     import {useSoftStore} from "../stores/soft-store";
     import {v4 as uuid} from "uuid";
     import moment from "moment";
+    import SpinnerVue from "./Spinner.vue";
 
     const softStore = useSoftStore();
-    const {setTableName,getUserId, create, read, readAll, del, delAll, exists, parseCurrency, verifyTrans, encrypt} = useSoftStore();
+    const {setTableName,getUserId, create, read, readAll, getOffer, del, delAll, exists, parseCurrency, verifyTrans, encrypt} = useSoftStore();
     const {apiUrl,isAdmin, clientPath,projectName, _offer, allProducts, paystack_public_key, paystack_secret_key} = storeToRefs(softStore);
     
     const products = ref([] as any);
@@ -40,16 +41,29 @@
            }
         }, 5000);
     }
+    function scrollIntoDiv() {
+        var elem = document.getElementById('products') as HTMLDivElement;
+        if (elem) {
+            elem.scrollIntoView();
+        }
+    }
     onMounted(() => {
         showSlides();
-        allProducts.value.forEach(product => {
-            if ((moment(new Date()).diff(moment(product.date),'days')) <= 7) {
-                _products.value = [..._products.value,product];
-            }
-            //console.log(`${product.name} : ${(moment(new Date()).diff(moment(product.date),'days'))}`)
-        });
+        getOffer();
+        readAll("Products").then(
+            response => {
+            if (Array.isArray(response.data) && response.data.length) {
+                response.data.forEach(element => {
+                    var product = JSON.parse(element.value);
+                    if ((moment(new Date()).diff(moment(product.date),'days')) <= 7) {
+                    _products.value = [..._products.value,product];
+                    }
+                });
+            }});
         timeProducts();
-
+        setTimeout(() => {
+                scrollIntoDiv();
+        }, 5000);
         
 
         // setInterval(() => {
@@ -91,22 +105,14 @@
                 <div class="col-2">
                     <h1>Peter's Soft Digital Store </h1>
                     <p>Shop <i class='fa fa-shopping-cart'></i> swiftly <i class="fa fa-star"></i> with Peter's digital Store and Logistics <i class="fa fa-bus"> </i></p>
-                    <!-- <button class="btn"> -->
                         <router-link to="/products">
                             <button class="btn">Shop Now</button>
                         </router-link>
-                    <!-- </button> -->
                 </div>
                 <div class="col-2">
                     <div class="slideshow-container">
                         <div class="mySlides fade">
                         <img src="../images/log1.jpg" style="width:100%">
-                        </div>
-                        <div class="mySlides fade">
-                        <img src="../images/log6.jpg" style="width:100%">
-                        </div>
-                        <div class="mySlides fade">
-                        <img src="../images/log7.jpg" style="width:100%">
                         </div>
                     
                         <div class="mySlides fade">
@@ -117,42 +123,55 @@
                         </div>
                     
                         <div class="mySlides fade">
-                        <img src="../images/comm2.jpg" style="width:100%">
-                        </div>
-                    
-                        <div class="mySlides fade">
-                        <img src="../images/cargo1.jpg" style="width:100%">
-                        </div>
-                        <div class="mySlides fade">
-                        <img src="../images/bus1.jpg" style="width:100%">
-                        </div>
-                    
-                        <div class="mySlides fade">
                         <img src="../images/comm3.jpg" style="width:100%">
+                        </div>
+                        <div class="mySlides fade">
+                        <img src="../images/home2.jpg" style="width:100%">
+                        </div>
+                        <div class="mySlides fade">
+                        <img src="../images/home3.jpg" style="width:100%">
+                        </div>
+                        <div class="mySlides fade">
+                        <img src="../images/home4.jpeg" style="width:100%">
+                        </div>
+                        <div class="mySlides fade">
+                        <img src="../images/home5.jpeg" style="width:100%">
+                        </div>
+
+                        <div class="mySlides fade">
+                        <img src="../images/home6.jpeg" style="width:100%">
+                        </div>
+                        <div class="mySlides fade">
+                        <img src="../images/home7.jpeg" style="width:100%">
                         </div>
                     </div>
                 </div>
         </div>
 
         <!--featured categories-->
-        <div class="categories">
+        <div class="categories" id="products">
             <div class="small-container" v-if="products.length">
                 <h2 class="title">New Products</h2>
                 <div class="row productImg">
-            <div v-for="product in products" :key="product.id" class="col-3">
-                <router-link  :to="{name : 'productDetails', params:{id: product.id}}" >
-                    <img :src="product.imageUrl" alt="product-1">
-                    <h4>{{product.name}}</h4>
-                    <div v-if="product.isNew" class="rating" v-for="i in 5" :key="i">
-                        <i class="fa fa-star"></i>
+                    <div v-for="product in products" :key="product.id" class="col-3">
+                        <router-link  :to="{name : 'productDetails', params:{id: product.id}}" >
+                            <img :src="product.imageUrl" alt="product-1">
+                            <h4>{{product.name}}</h4>
+                            <div v-if="product.isNew" class="rating" v-for="i in 5" :key="i">
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div v-else class="rating" v-for="j in 3" :key="j">
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <p>{{parseCurrency(product.price)}}</p>
+                        </router-link>
                     </div>
-                    <div v-else class="rating" v-for="j in 3" :key="j">
-                        <i class="fa fa-star"></i>
-                    </div>
-                    <p>{{parseCurrency(product.price)}}</p>
-                </router-link>
-            </div>
-        </div>
+                </div>
+                <div class="text-center">
+                    <router-link to="/products">
+                            <button class="btn">Explore More</button>
+                    </router-link>
+                </div>
             </div>
         </div>
 
