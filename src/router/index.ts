@@ -13,6 +13,8 @@ import ProductDetails from "@/components/ProductDetails.vue";
 import OrderDetails from "@/components/OrderDetails.vue";
 import PaymentInfo from "@/components/PaymentInfo.vue";
 import AllProducts from "@/components/AllProducts.vue";
+import NotFound from "@/components/404.vue";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -89,6 +91,11 @@ const router = createRouter({
       path: "/allProducts",
       name: "allProducts",
       component:AllProducts,
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "404",
+      component: NotFound,
     },
   ],
 });
