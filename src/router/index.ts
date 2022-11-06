@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../components/Home.vue";
 import Products from "../components/Products.vue";
 import Logistics from "../components/Logistics.vue";
@@ -17,7 +17,7 @@ import NotFound from "@/components/404.vue";
 
 
 const router = createRouter({
-  history: createWebHistory(),//import.meta.env.BASE_URL
+  history: createWebHashHistory(),//import.meta.env.BASE_URL
   routes: [
     {
       path: "/",
