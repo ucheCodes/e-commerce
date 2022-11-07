@@ -211,7 +211,7 @@
         </div>
         <div class="page-btn" v-if="luxurySubDiv">
                 <span @click="trimLuxury(_luxury, luxuryStart,luxuryEnd,'backward')">&#8592;</span>
-                <label for="x">{{luxuryCount}} / {{luxurySubDiv}}</label>
+                <label for="x">{{luxuryCount}}/{{luxurySubDiv}}</label>
                 <span @click="trimLuxury(_luxury, luxuryStart,luxuryEnd,'forward')">&#8594;</span>
         </div>
     </div>            
@@ -257,7 +257,7 @@
         </div>
         <div v-if="productSubDiv" class="page-btn">
                 <span @click="trimProducts(_products, productStart,productEnd,'backward')">&#8592;</span>
-                <label for="x">{{productCount}} / {{productSubDiv}}</label>
+                <label for="x">{{productCount}}/{{productSubDiv}}</label>
                 <span @click="trimProducts(_products, productStart,productEnd,'forward')">&#8594;</span>
         </div>
     </div>
