@@ -7,7 +7,7 @@ import { onMounted, ref } from 'vue';
         timer.value = 0;
         setInterval(() => {
             timer.value++;
-            if (timer.value >= 20) {
+            if (timer.value >= 180) {
                 message.value = "Poor connection, kindly, refresh your browser"
             }
         }, 1000);

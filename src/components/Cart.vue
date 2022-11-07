@@ -75,17 +75,28 @@
         }
         return false;
     }
+    
+    function scrollIntoDiv() {
+        var elem = document.getElementById('cart-page') as HTMLDivElement;
+        if (elem) {
+            elem.scrollIntoView();
+        }
+    }
+
     onMounted(() => {
         if (cart.value.length) {
             subTotal();
         }
+        setTimeout(() => {
+                scrollIntoDiv();
+        }, 3000);
     });
 </script>
 <template>
     <div>
 
             <!--Cart Page-->
-    <div class="small-container cart-page" v-if="cart.length">
+    <div id="cart-page" class="small-container cart-page" v-if="cart.length">
         <table>
             <tr>
                 <th>Product</th>
