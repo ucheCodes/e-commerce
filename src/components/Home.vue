@@ -13,6 +13,7 @@
     const {setTableName,getUserId, create, read, readAll, getOffer, del, delAll, exists, parseCurrency, verifyTrans, encrypt} = useSoftStore();
     const {apiUrl,isAdmin, clientPath,projectName, _offer, allProducts, paystack_public_key, paystack_secret_key} = storeToRefs(softStore);
     
+    const isProductLoaded = ref<boolean>(false);
     const products = ref([] as any);
     const _products = ref([] as any);
     const counter = ref(0);
@@ -41,15 +42,7 @@
            }
         }, 5000);
     }
-    function scrollIntoDiv() {
-        var elem = document.getElementById('products') as HTMLDivElement;
-        if (elem) {
-            elem.scrollIntoView();
-        }
-    }
-    onMounted(() => {
-        showSlides();
-        getOffer();
+    const getProducts = () => {
         readAll("Products").then(
             response => {
             if (Array.isArray(response.data) && response.data.length) {
@@ -59,7 +52,27 @@
                     _products.value = [..._products.value,product];
                     }
                 });
+                //clearInterval here and set to true
+                //clearInterval(refresh);
+                isProductLoaded.value = true;
             }});
+    }
+    function scrollIntoDiv() {
+        var elem = document.getElementById('products') as HTMLDivElement;
+        if (elem) {
+            elem.scrollIntoView();
+        }
+    }
+    const refresh = setInterval(() => {
+        if(!isProductLoaded.value) {
+            window.location.reload();
+        }
+    },40000);
+    onMounted(() => {
+        showSlides();
+        getOffer();
+        getProducts();
+        refresh;
         timeProducts();
         setTimeout(() => {
                 scrollIntoDiv();

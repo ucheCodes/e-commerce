@@ -11,6 +11,7 @@
     const {setTableName, getUserId, parseCurrency, create, read, readAll, del, delAll, exists} = useSoftStore();
     const {apiUrl,isAdmin, clientPath,projectName, user, categoryArr, _offer, cart} = storeToRefs(softStore);
     
+    const isProductLoaded = ref<boolean>(false);
     const allProducts = ref([]);
     const selectedVal = ref("All");
     const products = ref([]);
@@ -173,14 +174,22 @@
                     const b : any = new Date(y.date);
                     return b - a;
                 });
+                clearInterval(refresh);
+                isProductLoaded.value = true;
              }
             getProducts();
             }
-        )
+        );
     }
+    const refresh = setInterval(() => {
+        if(!isProductLoaded.value) {
+            window.location.reload();
+        }
+    },40000);
     onMounted(() => {
         getAllProducts();
-    })
+        refresh;
+    });
 </script>
 <template>
 <div>

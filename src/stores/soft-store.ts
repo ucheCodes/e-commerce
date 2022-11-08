@@ -150,15 +150,6 @@ const getLogistics = () => {
    );
   }
 
-  const create = (tableName : string, key : string, value : any) => {
-    const table = setTableName(tableName);
-    return axios.post(apiUrl.value+"database",{
-        Tablename : table,
-        SerializedKey : JSON.stringify(key),
-        SerializedValue : JSON.stringify(value)
-    });
-  }
-
   const encrypt = (tableName : string, key : string, value : any) => {
     const table = setTableName(tableName);
     return axios.post(apiUrl.value+"paystack",{
@@ -173,6 +164,15 @@ const getLogistics = () => {
     return axios.get(apiUrl.value+"paystack/"+id);
   }
   
+  const create = (tableName : string, key : string, value : any) => {
+    const table = setTableName(tableName);
+    return axios.post(apiUrl.value+"database",{
+        Tablename : table,
+        SerializedKey : JSON.stringify(key),
+        SerializedValue : JSON.stringify(value)
+    });
+  }
+
 
   const read = async (tablename : string, key : string) => {
     return axios.post(apiUrl.value+"database/read",{

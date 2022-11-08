@@ -2,12 +2,12 @@
 import { onMounted, ref } from 'vue';
 
     const timer = ref<number>(0);
-    const message = ref<string>("Fetching data, please wait")
+    const message = ref<string>("Please ensure you have a steady connection")
     onMounted(() => {
         timer.value = 0;
         setInterval(() => {
             timer.value++;
-            if (timer.value >= 180) {
+            if (timer.value >= 60) {
                 message.value = "Poor connection, kindly, refresh your browser"
             }
         }, 1000);
@@ -15,8 +15,9 @@ import { onMounted, ref } from 'vue';
 </script>
 
 <template>
-    <div class="spinner">
+
+    <div>
+        <small class="spinner-text">{{message}} ... {{timer}} s</small>
         <div class="spin"></div>
-        <small>{{message}} ... {{timer}} s</small>
     </div>
 </template>

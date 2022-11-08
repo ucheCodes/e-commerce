@@ -629,11 +629,11 @@ form a{
   }
 }
 
-.spinner{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 30px 0;
+.spinner-text{
+  position: absolute;
+  top: 10%;
+  left: 2%;
+  margin: 60px 0;
 }
 .spin::before{
   animation: 1.5s linear infinite spinner;
@@ -642,12 +642,12 @@ form a{
   border-bottom-color: var(--main);
   border-radius: 50%;
   content: "";
-  height: 40px;
+  height: 30px;
   position: absolute;
   top: 10%;
-  left: 10%;
+  left: 92%;
   transform: translate3d(-50%,-50%,0);
-  width: 40px;
+  width: 30px;
   will-change: transform;
   margin: 60px 0;
 }
