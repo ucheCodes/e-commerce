@@ -76,7 +76,7 @@
         timeProducts();
         setTimeout(() => {
                 scrollIntoDiv();
-        }, 5000);
+        }, 7000);
         
 
         // setInterval(() => {
@@ -162,10 +162,10 @@
         </div>
 
         <!--featured categories-->
-        <div class="categories" id="products">
+        <div class="categories">
             <div class="small-container" v-if="products.length">
                 <h2 class="title">New Products</h2>
-                <div class="row productImg">
+                <div class="row productImg" id="products">
                     <div v-for="product in products" :key="product.id" class="col-3">
                         <router-link  :to="{name : 'productDetails', params:{id: product.id}}" >
                             <img :src="product.imageUrl" alt="product-1">
@@ -185,6 +185,9 @@
                             <button class="btn">Explore More</button>
                     </router-link>
                 </div>
+            </div>
+            <div v-else>
+                <div class="spin-home"></div>
             </div>
         </div>
 

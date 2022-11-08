@@ -93,10 +93,10 @@
     });
 </script>
 <template>
-    <div>
+    <div id="cart-page">
 
             <!--Cart Page-->
-    <div id="cart-page" class="small-container cart-page" v-if="cart.length">
+    <div class="small-container cart-page" v-if="cart.length">
         <table>
             <tr>
                 <th>Product</th>

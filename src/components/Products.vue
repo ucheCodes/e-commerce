@@ -192,10 +192,9 @@
     });
 </script>
 <template>
-<div>
+<div id="top">
   
     <div v-if="luxury.length || products.length">
-                <!--featured products-->
     <div class="small-container">
         <div class="title">Luxury Goods</div>
         <div class="row"  v-if="luxury.length">

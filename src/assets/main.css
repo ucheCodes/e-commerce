@@ -651,6 +651,22 @@ form a{
   will-change: transform;
   margin: 60px 0;
 }
+.spin-home::before{
+  animation: 1.5s linear infinite spinner;
+  animation-play-state: inherit;
+  border: solid 5px gray;
+  border-bottom-color: var(--main);
+  border-radius: 50%;
+  content: "";
+  height: 30px;
+  position: fixed;
+  top: 85%;
+  left : 50%; 
+  transform: translate3d(-50%,-50%,0);
+  width: 30px;
+  will-change: transform;
+  margin: 60px 0;
+}
 
 
 
