@@ -21,25 +21,25 @@
         setInterval(() => {
            //console.log(counter.value += 3) 
            if (_products.value.length) {
-            if (((_products.value.length - 1) - counter.value) > 3) {//product counts from 0
-                products.value = [];
-                for (let i = 0; i <  3; i++) {
-                    const p = _products.value[counter.value];
-                    products.value.push(p);
-                    counter.value++;
+                if (((_products.value.length - 1) - counter.value) > 3) {//product counts from 0
+                    products.value = [];
+                    for (let i = 0; i <  3; i++) {
+                        const p = _products.value[counter.value];
+                        products.value.push(p);
+                        counter.value++;
+                    }
+                }
+                else{
+                    products.value = [];
+                    var count = (_products.value.length) - 3;
+                    for (let i = 0; i <  3; i++) {
+                        const p = _products.value[count];
+                        products.value.push(p);
+                        count++;
+                    }
+                    counter.value = 0;
                 }
             }
-            else{
-                products.value = [];
-                var count = (_products.value.length) - 3;
-                for (let i = 0; i <  3; i++) {
-                    const p = _products.value[count];
-                    products.value.push(p);
-                    count++;
-                }
-                counter.value = 0;
-            }
-           }
         }, 5000);
     }
     const getProducts = () => {
@@ -52,8 +52,7 @@
                     _products.value = [..._products.value,product];
                     }
                 });
-                //clearInterval here and set to true
-                //clearInterval(refresh);
+                clearInterval(refresh);
                 isProductLoaded.value = true;
             }});
     }
@@ -71,8 +70,14 @@
     onMounted(() => {
         showSlides();
         getOffer();
-        getProducts();
-        refresh;
+        if (allProducts.value.length) {
+            _products.value = allProducts.value.filter(product =>  ((moment(new Date()).diff(moment(product.date),'days')) <= 7))
+            isProductLoaded.value = true;
+        }
+        else{
+            getProducts();
+            refresh;
+        }
         timeProducts();
         setTimeout(() => {
                 scrollIntoDiv();

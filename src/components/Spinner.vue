@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 
     const timer = ref<number>(0);
-    const message = ref<string>("Please ensure you have a steady connection")
+    const message = ref<string>("Pls, ensure you have a steady connection")
     onMounted(() => {
         timer.value = 0;
         setInterval(() => {

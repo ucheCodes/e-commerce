@@ -70,7 +70,7 @@
       return email.value && email.value.length > 0 && regex.test(email.value)
     }
     const isMobileValid = (mobile : string) => {
-        if ((mobile.length > 11 && mobile.includes('+')) || mobile.length == 11) {
+        if ((mobile.length == 14 && mobile.includes('+')) || mobile.length == 11) {
            return true
         }
         return false;

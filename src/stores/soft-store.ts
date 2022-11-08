@@ -2,6 +2,7 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
+import moment from "moment";
 
 export const useSoftStore = defineStore("soft-store", () => {
   const projectName = ref("Peter's Soft Digital Store-");
@@ -63,6 +64,7 @@ const getAllProducts = () => {
         response.data.forEach(element => {
           allProducts.value.push(JSON.parse(element.value));
         });
+        console.log("all products populated");
       }
     }
   )
@@ -254,6 +256,8 @@ const makePayment = (data : any) => {
           ${reference} is well received. <br> <a href="https://peterstore.vercel.app/">click here to Explore More Content From Peter's 
           Soft Digital Store</a> </p> <br> <br> <a href="https://api.whatsapp.com/send?phone=2349063809830">Chat with our customer care representative</a>`;
           sendEmail(data.email,reference,"Peter's Soft Digital Store", body);
+          sendEmail("flexyvic12@gmail.com",reference,"Peter's Soft Digital Store", `<p>new order received. Id :
+           ${reference} <br> date : ${moment(new Date()).format('ll')}  ${moment(new Date()).format('LT')}  </p>`);
         }
       },
       onClose: function() {

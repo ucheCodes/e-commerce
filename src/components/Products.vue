@@ -9,10 +9,10 @@
 
     const softStore = useSoftStore();
     const {setTableName, getUserId, parseCurrency, create, read, readAll, del, delAll, exists} = useSoftStore();
-    const {apiUrl,isAdmin, clientPath,projectName, user, categoryArr, _offer, cart} = storeToRefs(softStore);
+    const {apiUrl,isAdmin, clientPath,projectName, user, categoryArr, _offer, cart, allProducts} = storeToRefs(softStore);
     
     const isProductLoaded = ref<boolean>(false);
-    const allProducts = ref([]);
+    const _allProducts = ref([]);
     const selectedVal = ref("All");
     const products = ref([]);
     const _products = ref([]);
@@ -33,23 +33,23 @@
     const categoryChanged = (e) => {
         selectedVal.value = e.target.value;
         if (e.target.value == "All") {
-            products.value = allProducts.value;
+            products.value = _allProducts.value;
         } 
         else if (e.target.value == "Recent") {
-            products.value = allProducts.value.filter((product) => ((moment(new Date()).diff(moment(product.date),'days')) <= 3));
+            products.value = _allProducts.value.filter((product) => ((moment(new Date()).diff(moment(product.date),'days')) <= 3));
         }
         else {
-            products.value = allProducts.value.filter((result) => result.category == e.target.value);
+            products.value = _allProducts.value.filter((result) => result.category == e.target.value);
         }
     }
     const search = (e) => {
         var key = e.target.value.toLowerCase();
-        products.value = allProducts.value.filter(p => (p.name.toLowerCase().includes(key)) || (p.searchKey.toLowerCase().includes(key)));
+        products.value = _allProducts.value.filter(p => (p.name.toLowerCase().includes(key)) || (p.searchKey.toLowerCase().includes(key)));
     }
     const getProducts = () => {
-        if (allProducts.value) {
-             _products.value = allProducts.value.filter(p => p.category != 'luxury');
-            _luxury.value = allProducts.value.filter(p => p.category == 'luxury'); 
+        if (_allProducts.value) {
+             _products.value = _allProducts.value.filter(p => p.category != 'luxury');
+            _luxury.value = _allProducts.value.filter(p => p.category == 'luxury'); 
             trimProducts(_products.value, productStart.value, productEnd.value,'forward');        
             trimLuxury(_luxury.value, luxuryStart.value, luxuryEnd.value,'forward');        
         }
@@ -165,11 +165,11 @@
             response => {
             if (Array.isArray(response.data) && response.data.length) {
                 response.data.forEach(element => {
-                allProducts.value.push(JSON.parse(element.value));
+                _allProducts.value.push(JSON.parse(element.value));
                 });
             };
-            if (allProducts.value.length) {
-                allProducts.value.sort(function (x ,y) {
+            if (_allProducts.value.length) {
+                _allProducts.value.sort(function (x ,y) {
                     const a : any = new Date(x.date);
                     const b : any = new Date(y.date);
                     return b - a;
@@ -187,8 +187,25 @@
         }
     },40000);
     onMounted(() => {
-        getAllProducts();
-        refresh;
+        //This repetitive codes is really unnecessary but just in an attempt to have a better user experience
+        //I choose to code this way.
+       if (allProducts.value.length) {
+            _allProducts.value = allProducts.value;
+            if (_allProducts.value.length) {
+                _allProducts.value.sort(function (x ,y) {
+                    const a : any = new Date(x.date);
+                    const b : any = new Date(y.date);
+                    return b - a;
+                });
+                clearInterval(refresh);
+                isProductLoaded.value = true;
+             }
+            getProducts();
+        }
+        else{
+            getAllProducts();
+            refresh;
+        }
     });
 </script>
 <template>
