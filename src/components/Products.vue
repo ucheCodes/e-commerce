@@ -185,7 +185,7 @@
         if(!isProductLoaded.value) {
             window.location.reload();
         }
-    },40000);
+    },60000);
     onMounted(() => {
         //This repetitive codes is really unnecessary but just in an attempt to have a better user experience
         //I choose to code this way.

@@ -14,8 +14,8 @@
     <div>
 
             <!--offers props.offer.id-->
-    <div class="offer">
-        <div class="small-container" v-if="props.offer.id">
+    <div class="offer" v-if="props.offer.id">
+        <div class="small-container">
             <h2 class="title">Exclusive Offer</h2>
             <div class="row" @click="gotoProductDetails(props.offer.id)">
                 <div class="col-2">

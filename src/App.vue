@@ -25,9 +25,9 @@ import {useSoftStore} from "./stores/soft-store";
 
   onMounted(() => {
     menuToggle();
+    getAllProducts();
     getUserId();
     getAllCategory();
-    getAllProducts();
     getAllOffers();
     getLogistics();
     getAllOrders();

@@ -64,7 +64,6 @@ const getAllProducts = () => {
         response.data.forEach(element => {
           allProducts.value.push(JSON.parse(element.value));
         });
-        console.log("all products populated");
       }
     }
   )

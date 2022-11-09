@@ -66,13 +66,14 @@
         if(!isProductLoaded.value) {
             window.location.reload();
         }
-    },40000);
+    },60000);
     onMounted(() => {
         showSlides();
         getOffer();
         if (allProducts.value.length) {
             _products.value = allProducts.value.filter(product =>  ((moment(new Date()).diff(moment(product.date),'days')) <= 7))
             isProductLoaded.value = true;
+            clearInterval(refresh);
         }
         else{
             getProducts();
@@ -81,7 +82,7 @@
         timeProducts();
         setTimeout(() => {
                 scrollIntoDiv();
-        }, 7000);
+        }, 10000);
         
 
         // setInterval(() => {
