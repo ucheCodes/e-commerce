@@ -160,7 +160,7 @@
         }
     }
 
-    const getAllProducts = () => {
+    /*const getAllProducts = () => {
         readAll("Products").then(
             response => {
             if (Array.isArray(response.data) && response.data.length) {
@@ -174,22 +174,21 @@
                     const b : any = new Date(y.date);
                     return b - a;
                 });
-                clearInterval(refresh);
                 isProductLoaded.value = true;
              }
             getProducts();
             }
         );
-    }
-    const refresh = setInterval(() => {
+    }*/
+    /*const refresh = setInterval(() => {
         if(!isProductLoaded.value) {
-            window.location.reload();
+            //window.location.reload();
+            //history.go();
+            getAllProducts();
         }
-    },60000);
-    onMounted(() => {
-        //This repetitive codes is really unnecessary but just in an attempt to have a better user experience
-        //I choose to code this way.
-       if (allProducts.value.length) {
+    },30000);*/
+    const sortProducts = () => {
+        if (allProducts.value.length) {
             _allProducts.value = allProducts.value;
             if (_allProducts.value.length) {
                 _allProducts.value.sort(function (x ,y) {
@@ -197,15 +196,21 @@
                     const b : any = new Date(y.date);
                     return b - a;
                 });
-                clearInterval(refresh);
                 isProductLoaded.value = true;
-             }
+            }
             getProducts();
         }
-        else{
-            getAllProducts();
-            refresh;
-        }
+    }
+    const populateProducts = () => {
+        setInterval(() => {
+            if(!isProductLoaded.value) {
+                sortProducts();
+            }
+        },3000);
+    }
+    onMounted(() => {
+        sortProducts();
+        populateProducts();
     });
 </script>
 <template>

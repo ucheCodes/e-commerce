@@ -6,7 +6,7 @@ import {storeToRefs} from "pinia";
 import {useSoftStore} from "./stores/soft-store";
     const softStore = useSoftStore();
     const {getUserId, encrypt, decrypt, getAllCategory, getChats, getAllProducts, getAllOrders, getAllOffers, getOffer, getLogistics} = useSoftStore();
-    const {isAdmin, paystack_secret_key, paystack_public_key} = storeToRefs(softStore);
+    const {isAdmin, paystack_secret_key, paystack_public_key, isAllProductsLoaded} = storeToRefs(softStore);
 
   function menuToggle(){
     var menuItems = document.getElementById("menuItems");
@@ -32,6 +32,11 @@ import {useSoftStore} from "./stores/soft-store";
     getLogistics();
     getAllOrders();
     getChats();
+    setInterval(() => {
+      if (!isAllProductsLoaded.value) {
+        getAllProducts();
+      }
+    },30000);
 
     /*encrypt("Encryption","paystack",{ // just comment this out when ready
             public_key : paystack_public_key.value,
@@ -67,7 +72,7 @@ import {useSoftStore} from "./stores/soft-store";
                       <li><RouterLink to="/products">Products</RouterLink></li>
                       <li><RouterLink to="/logistics">Logistics</RouterLink></li>
                       <li><RouterLink to="/customerCare">Customer Care</RouterLink></li>
-                      <li><RouterLink to="/data">Data | Account</RouterLink></li>
+                      <li><RouterLink to="/data">Login</RouterLink></li>
                       <li v-if="isAdmin"><RouterLink to="/orders">Orders</RouterLink></li>
                       <li v-if="isAdmin"><RouterLink to="/logs">Logs</RouterLink></li>
                       <li v-if="isAdmin"><RouterLink to="/setOffer">Set Offer</RouterLink></li>

@@ -13,6 +13,7 @@ export const useSoftStore = defineStore("soft-store", () => {
   const user = ref<string>("");
   const isAdmin = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
+  const isAllProductsLoaded = ref<boolean>(false);
   const categoryArr = ref([]as string[]);
   const allProducts = ref([]as any);
   const orders = ref([]as any);
@@ -61,13 +62,17 @@ const getAllProducts = () => {
   readAll("Products").then(
     response => {
       if (Array.isArray(response.data) && response.data.length) {
-        response.data.forEach(element => {
-          allProducts.value.push(JSON.parse(element.value));
-        });
+        if (!allProducts.value.length) {
+          response.data.forEach(element => {
+            allProducts.value.push(JSON.parse(element.value));
+          });
+          isAllProductsLoaded.value = true;
+        }
       }
     }
   )
 }
+
 const getAllOrders = () => {
   readAll("Orders").then(
     response => {
@@ -250,7 +255,7 @@ const makePayment = (data : any) => {
         if (response.status == "success") {
           create("Orders",data.ref,orderInfo).then(response => alert(`We can't thrive without you. Thank you so much \n ${response.data}`));
           cart.value = [];
-          //call email sending api here
+          //call email sending api here 
           var body = `<p>Thank you for patronizing us, We really appreciate your patronage on our platform. Thank you. <br> Your transaction with reference Id
           ${reference} is well received. <br> <a href="https://peterstore.vercel.app/">click here to Explore More Content From Peter's 
           Soft Digital Store</a> </p> <br> <br> <a href="https://api.whatsapp.com/send?phone=2349063809830">Chat with our customer care representative</a>`;
@@ -294,7 +299,7 @@ const makePayment = (data : any) => {
   return { 
     projectName, apiUrl, serverPath,clientPath, user, isAdmin, categoryArr, allProducts,_offer,cart,
      offers,logistics, commision, vat,orders, _edit, rawChats,isLoading, paystack_public_key, paystack_secret_key,
-      paystack_url,
+      paystack_url, isAllProductsLoaded,
        verifyTrans, setTableName, parseCurrency, nairaToKobo, KoboToNaira, getAllCategory, getChats, getAllProducts,getAllOrders, getOffer,getLogistics, getAllOffers, getUserId, create, 
       read, readAll, del, delAll, exists, find,makePayment, encrypt, decrypt, sendEmail
   };

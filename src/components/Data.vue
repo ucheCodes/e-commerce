@@ -122,7 +122,7 @@
             }
             else{
                 create("Offers",_edit.value.id,_edit.value).then(response => alert(response.data));
-                create("Products",_edit.value.id,_edit.value).then(response => console.log(response.data));
+                create("Products",_edit.value.id,_edit.value).then(response => alert(response.data));
                 _edit.value = {};
             }
         }
@@ -169,7 +169,7 @@
                     searchKey.value = "";filepath.value = ""; imageUrl.value= "";
                 }
                 else{
-                    create("Offers",product.id,product).then(response => alert(response.data));
+                    create("Offers",product.id,product);
                     create("Products",product.id,product).then(response => console.log(response.data));
 
                     offers.value.push(product);

@@ -2,14 +2,14 @@
     import offer from './Offer.vue';
     import { onMounted, ref } from "vue";
     import  showSlides  from "../assets/slideshow.js";
-
+    import moment from 'moment';
     import {useSoftStore} from "../stores/soft-store";
     import axios from 'axios';
     import {v4 as uuid} from "uuid";
     import {storeToRefs } from "pinia";
 
     const softStore = useSoftStore();
-    const {setTableName, getUserId, create, read, readAll, del, delAll, exists} = useSoftStore();
+    const {setTableName, getUserId, create, read, readAll, del, delAll, exists, sendEmail} = useSoftStore();
     const {apiUrl,isAdmin, clientPath,projectName, user, categoryArr, _offer, logistics} = storeToRefs(softStore);
 
     const file = ref([] as any);
@@ -48,6 +48,8 @@
             if (response.status == 200) {
                 logistics.value.push(logData);
                 alert(response.data);
+                sendEmail("uchefavourchika@gmail.com",logData.id,"Peter's Soft Digital Store", `<p>new logistics order received. Id :
+                ${logData.id} <br> date : ${moment(new Date()).format('ll')}  ${moment(new Date()).format('LT')}  </p>`);
             }
         });
         productName.value = "";productDesc.value = "";receiverMobile.value = "";senderMobile.value = "";

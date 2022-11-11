@@ -17,30 +17,35 @@
     const products = ref([] as any);
     const _products = ref([] as any);
     const counter = ref(0);
-    const timeProducts = () => {
-        setInterval(() => {
-           //console.log(counter.value += 3) 
-           if (_products.value.length) {
-                if (((_products.value.length - 1) - counter.value) > 3) {//product counts from 0
-                    products.value = [];
-                    for (let i = 0; i <  3; i++) {
-                        const p = _products.value[counter.value];
-                        products.value.push(p);
-                        counter.value++;
-                    }
-                }
-                else{
-                    products.value = [];
-                    var count = (_products.value.length) - 3;
-                    for (let i = 0; i <  3; i++) {
-                        const p = _products.value[count];
-                        products.value.push(p);
-                        count++;
-                    }
-                    counter.value = 0;
-                }
+    const timerCarousel = () => {
+        if (((_products.value.length - 1) - counter.value) > 3) {//product counts from 0
+            products.value = [];
+            for (let i = 0; i <  3; i++) {
+                const p = _products.value[counter.value];
+                products.value.push(p);
+                counter.value++;
             }
-        }, 5000);
+        }
+        else{
+            products.value = [];
+            var count = (_products.value.length) - 3;
+            for (let i = 0; i <  3; i++) {
+                const p = _products.value[count];
+                products.value.push(p);
+                count++;
+            }
+            counter.value = 0;
+        }
+    }
+    const timeProducts = () => {
+        if (_products.value.length) {
+            timerCarousel();
+        }
+        setInterval(() => {
+            if (_products.value.length) {
+                timerCarousel();
+            }
+        }, 10000);
     }
     const getProducts = () => {
         readAll("Products").then(
@@ -48,11 +53,10 @@
             if (Array.isArray(response.data) && response.data.length) {
                 response.data.forEach(element => {
                     var product = JSON.parse(element.value);
-                    if ((moment(new Date()).diff(moment(product.date),'days')) <= 7) {
+                    if ((moment(new Date()).diff(moment(product.date),'days')) <= 30) {
                     _products.value = [..._products.value,product];
                     }
                 });
-                clearInterval(refresh);
                 isProductLoaded.value = true;
             }});
     }
@@ -62,27 +66,35 @@
             elem.scrollIntoView();
         }
     }
-    const refresh = setInterval(() => {
-        if(!isProductLoaded.value) {
-            window.location.reload();
+    const filterHomeProducts = () => {
+        if (allProducts.value.length) {
+            _products.value = allProducts.value.filter(product =>  ((moment(new Date()).diff(moment(product.date),'days')) <= 30))
+            isProductLoaded.value = true;
+            //use only when I want to automatically update gold from this end
+           /* tempGoldModifier(18,41000);
+            tempGoldModifier(22,48000);*/
         }
-    },60000);
+    }
+    const tempGoldModifier = (karats : number, price : number) => {
+        var gold = allProducts.value.filter(p => p.category == 'luxury' && p.name.toLowerCase().includes(karats+' karats'));
+        gold.forEach(element => {
+            element.price = price
+            create("Products",element.id,element);
+        });
+    }
+    const populateHomeProducts = () => {
+        setInterval(() => {
+            if (!_products.value.length) {
+                filterHomeProducts();
+            }
+        },3000);
+    }
     onMounted(() => {
         showSlides();
         getOffer();
-        if (allProducts.value.length) {
-            _products.value = allProducts.value.filter(product =>  ((moment(new Date()).diff(moment(product.date),'days')) <= 7))
-            isProductLoaded.value = true;
-            clearInterval(refresh);
-        }
-        else{
-            getProducts();
-            refresh;
-        }
+        filterHomeProducts();
+        populateHomeProducts();
         timeProducts();
-        setTimeout(() => {
-                scrollIntoDiv();
-        }, 10000);
         
 
         // setInterval(() => {
@@ -170,7 +182,7 @@
         <!--featured categories-->
         <div class="categories">
             <div class="small-container" v-if="products.length">
-                <h2 class="title">New Products</h2>
+                <h2 class="title">Latest Products</h2>
                 <div class="row productImg" id="products">
                     <div v-for="product in products" :key="product.id" class="col-3">
                         <router-link  :to="{name : 'productDetails', params:{id: product.id}}" >
