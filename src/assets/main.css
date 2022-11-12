@@ -762,6 +762,14 @@ form a{
 
 }
 @media only screen and (max-width:360px){
+  .logo .fa-shopping-cart{
+    display:none;
+  }
+  .logo{
+    width: 110px;
+  }
+}
+@media only screen and (max-width:290px){
   .logo{
     display:none;
   }
