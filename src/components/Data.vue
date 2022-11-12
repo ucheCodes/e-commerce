@@ -42,7 +42,10 @@
                         username : username.value,
                         id : user.value
                     };
-                    create("Admin",user.value,admin).then(res => console.log(res.data));
+                    create("Admin",user.value,admin).then(res => alert(res.data));
+                }
+                else{
+                    alert("passwords do not match !!!")
                 }
             }
             else{
@@ -235,7 +238,6 @@
                                 <input v-model="mobile" type="text" placeholder="affiliate's Mobile contact">
                                 <select id="select-cat" v-if="categoryArr.length">
                                     <option value="default">Select Category</option>
-                                    <option value="luxury">Luxury</option>
                                     <option v-for="c in categoryArr" :key="c" :value="c">{{c}}</option>
                                 </select>
                                 <input v-model="searchKey" type="text" placeholder="Add search parameter / sub - category">

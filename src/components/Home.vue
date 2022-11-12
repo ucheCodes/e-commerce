@@ -60,12 +60,6 @@
                 isProductLoaded.value = true;
             }});
     }
-    function scrollIntoDiv() {
-        var elem = document.getElementById('products') as HTMLDivElement;
-        if (elem) {
-            elem.scrollIntoView();
-        }
-    }
     const filterHomeProducts = () => {
         if (allProducts.value.length) {
             _products.value = allProducts.value.filter(product =>  ((moment(new Date()).diff(moment(product.date),'days')) <= 30))

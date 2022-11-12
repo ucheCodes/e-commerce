@@ -25,8 +25,8 @@
     const luxurySubDiv = ref<number>();
 
     const productStart = ref<number>(0);
-    const productEnd = ref<number>(8);
-    const productIncrement = 8;
+    const productEnd = ref<number>(16);
+    const productIncrement = 16;
     const productCount = ref<number>(0);
     const productSubDiv = ref<number>();
 
@@ -99,6 +99,7 @@
         else{
             products.value = product;
         }
+        scrollIntoDiv('products');
     }
     const trimLuxury = (product : any, start : number, end : number, direction : string) => {
         luxury.value = [];
@@ -146,6 +147,7 @@
            luxury.value = product;
            luxurySubDiv.value = 0;
         }
+        scrollIntoDiv('luxury');
     }
 
     const addToCart = (product : any) => {
@@ -208,6 +210,12 @@
             }
         },3000);
     }
+    function scrollIntoDiv(id : string) {
+        var elem = document.getElementById(id) as HTMLDivElement;
+        if (elem) {
+            elem.scrollIntoView();
+        }
+    }
     onMounted(() => {
         sortProducts();
         populateProducts();
@@ -217,7 +225,7 @@
 <div id="top">
   
     <div v-if="luxury.length || products.length">
-    <div class="small-container">
+    <div class="small-container"  id="luxury">
         <div class="title">Luxury Goods</div>
         <div class="row"  v-if="luxury.length">
             <div v-for="product in luxury" :key="product.id" class="col-4">
@@ -245,7 +253,7 @@
                 <span @click="trimLuxury(_luxury, luxuryStart,luxuryEnd,'forward')">&#8594;</span>
         </div>
     </div>            
-    <div class="small-container">
+    <div class="small-container" id="products">
         <div class="title">{{selectedVal}} products</div>
         <div class="row-3">
             <p>Select by Category</p>
