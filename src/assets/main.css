@@ -761,7 +761,7 @@ form a{
   }
 
 }
-@media only screen and (max-width:360px){
+@media only screen and (max-width:395px){
   .logo .fa-shopping-cart{
     display:none;
   }
@@ -771,6 +771,6 @@ form a{
 }
 @media only screen and (max-width:290px){
   .logo{
-    display:none;
+    display:none;  
   }
 }
