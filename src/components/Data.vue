@@ -12,8 +12,11 @@
 
     const file = ref([] as any);
     const imageUrl = ref<string>("");
+    const userImageUrl = ref<string>("");
     const filepath = ref<string>("");
     const username = ref<string>("");
+    const userEmail = ref<string>("");
+    const userMobile = ref<string>("");
     const password1 = ref<string>("");
     const password2 = ref<string>("");
     const category = ref<string>("");
@@ -34,7 +37,7 @@
                 alert("category field can not be empty.")
             }
         }
-        const setAdmin = (e) => {
+        const setAdminUser = (e) => {
             e.preventDefault();
             if ((password1.value == password2.value) && user.value && username.value != "") {
                 if ((password1.value && password2.value) == "$admin") {
@@ -48,8 +51,27 @@
                     alert("passwords do not match !!!")
                 }
             }
+            else if ((password1.value == password2.value) && user.value && username.value != "" && isEmailValid(userEmail.value) && isMobileValid(userMobile.value)) {
+                //generate psn id; create and add user to database
+                //send email to the user with their psn id
+                //enable their dashboard which will contain their wallet info, order and cash out transactions as it is with admin
+                //wallet balance and cashout menu that will contain their withdrawal account
+                //send out an OTP to their registered email and have then confirm in 3 minutes or less
+                //if the confirmed OTP from their email is in alliance with the one saved in database in no more than 3 minutes
+                //Then approve the transaction automatically and log it to an admin panel which I will set up
+                //All I have to do is wire the user, deduct the amount from their wallet balance and give them a trancaction notification
+
+                //Let the users id be their email so they can not register more than one email at the same time
+                //Whwnever they come online and register and register their email then their dashboard will be made visible
+
+                //in the cart component where the users make payment, add #100 to the VAT then add a text box
+                //where users can users can supply their psn id
+                //Once the psn id is valid and in my database then add #100 to the fund there in and save
+                //Users can make payment with their wallet balance
+                //The dashboard component should have a button leading to the login component
+            }
             else{
-               alert("password fields must match and username valid");
+               alert("password fields must match and input fields valid as necessary");
             }
         }
 
@@ -75,6 +97,9 @@
             }
         }
 
+        const uploadUserImage = (e) => {
+            alert("copy the on file change code below when ready");
+        }
 
         const onFileChange = (e) => {
             file.value = e.target.files[0];
@@ -185,7 +210,18 @@
                 alert("all input fields must be filled accordingly");
             }
         }
+        const isEmailValid = (email : string) => {
+            const regex = /\S+@\S+\.\S+/ // this is just a simple check
+            return email && email.length > 0 && regex.test(email)
+        }
+        const isMobileValid = (mobile : string) => {
+            if ((mobile.length == 14 && mobile.includes('+')) || mobile.length == 11) {
+            return true
+            }
+            return false;
+         }
         onMounted(() => {
+            console.log("make necessary updates and log users to their dashboard when they login")
         });
 </script>
 
@@ -262,23 +298,33 @@
                 </div>
                 <div class="col-2">
                     <h2 class="title">Account Registration</h2>
-                    <div class="form-container">
+                    <div class="form-container users-form">
                         <div class="form-btn">
                             <span @click="login">Login</span>
                             <span @click="register">Register</span>
                             <hr id="indicator">
                         </div>
                         <form id="loginForm">
-                            <input type="text" placeholder="username">
+                            <input type="email" placeholder="registered email">
+                            <input type="text" placeholder="PSN id">
                             <input type="password" placeholder="password">
                             <button class="btn" type="submit">Login</button>
                             <a href="">Forgot password</a>
                         </form>
                         <form id="regForm">
                             <input v-model="username" type="text" placeholder="username">
+                            <input v-model="userEmail" type="email" placeholder="valid email">
+                            <input v-model="userMobile" type="text" placeholder="valid mobile contact">
                             <input v-model="password1"  type="password" placeholder="password">
                             <input v-model="password2" type="password" placeholder="confirm password">
-                            <button @click="setAdmin" class="btn" type="submit">Register</button>
+                            <input type="file" id="imageFile2" accept=".jpg, .jpeg, .png, .jfif" @change="uploadUserImage" placeholder="upload user image">
+                            <div class="imgz" v-if="userImageUrl">
+                                <img :src="userImageUrl" alt="user image"/>
+                            </div>
+                            <div class="imgz" v-else>
+                                <img src="../assets/user.jpg" alt="user image"/>
+                            </div>
+                            <button @click="setAdminUser" class="btn" type="submit">Register</button>
                             <a href="">Forgot password</a>
                         </form>
                     </div>

@@ -53,7 +53,7 @@
             if (Array.isArray(response.data) && response.data.length) {
                 response.data.forEach(element => {
                     var product = JSON.parse(element.value);
-                    if ((moment(new Date()).diff(moment(product.date),'days')) <= 30) {
+                    if ((moment(new Date()).diff(moment(product.date),'days')) >= 3) { //editted just to keep the app up and running.
                     _products.value = [..._products.value,product];
                     }
                 });
@@ -62,7 +62,7 @@
     }
     const filterHomeProducts = () => {
         if (allProducts.value.length) {
-            _products.value = allProducts.value.filter(product =>  ((moment(new Date()).diff(moment(product.date),'days')) <= 30))
+            _products.value = allProducts.value.filter(product =>  ((moment(new Date()).diff(moment(product.date),'days')) >= 3))
             isProductLoaded.value = true;
             //use only when I want to automatically update gold from this end
            /* tempGoldModifier(18,41000);
@@ -81,7 +81,7 @@
             if (!_products.value.length) {
                 filterHomeProducts();
             }
-        },3000);
+        },5000);
     }
     onMounted(() => {
         showSlides();

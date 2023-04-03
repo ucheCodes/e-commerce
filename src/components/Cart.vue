@@ -6,6 +6,7 @@
     import {storeToRefs} from "pinia";
     import {useSoftStore} from "../stores/soft-store";
     import {v4 as uuid} from "uuid";
+import { parenthesizedExpression } from '@babel/types';
 
     const softStore = useSoftStore();
     const {setTableName,getUserId,parseCurrency, nairaToKobo, makePayment, create, read, readAll, del, delAll, exists} = useSoftStore();
@@ -16,6 +17,8 @@
     const subtotal = ref(0);
     const email = ref("");
     const customerMobile = ref("");
+    const customerAddress = ref("");
+    const psnId = ref("");
 
     const quantityChanged = (e) => {
         var id = e.target.id;
@@ -40,7 +43,7 @@
         const totalToKobo = subtotal.value * 100;
         const apiStatus = "200";
         var id = uuid();
-        if (isEmailValid() && isMobileValid(customerMobile.value)) {
+        if (isEmailValid() && isMobileValid(customerMobile.value) && customerAddress.value) {
             if (confirm(`${parseCurrency(subtotal.value)} will be debited from your bank`)) {
                 const payStackObj = {
                     email : email.value,
@@ -50,6 +53,8 @@
                 };
                 const orderInfo = {
                     customerId : user.value,
+                    customerAddress : customerAddress.value,
+                    psnId : psnId.value,
                     transactionId : id,
                     email : email.value,
                     mobile : customerMobile.value,
@@ -61,7 +66,7 @@
             }
         }
         else{
-            alert("kindly fill in your valid email address and mobile to proceed");
+            alert("kindly fill in your valid email, address and mobile to proceed");
         }
     }
      const isEmailValid = () => {
@@ -137,7 +142,9 @@
         </div>
         <div class="btns">
             <input v-model="email" type="email" placeholder="kindly supply your email address"/>
-            <input v-model="customerMobile" type="txt" placeholder="kindly supply your mobile contact"/>
+            <input v-model="customerMobile" type="text" placeholder="kindly supply your mobile contact"/>
+            <input v-model="customerAddress" type="text" placeholder="kindly supply your current Address"/>
+            <input v-model="psnId" type="text" placeholder="Paste your unique PSN Id, not compulsory*"/>
             <button  @click="pay" class="btn">Pay Now</button>
             <div v-if="paystack_url">
                 <a :href="paystack_url"><button class="btn">Check out</button></a>

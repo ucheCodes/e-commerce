@@ -8,6 +8,9 @@ import Logs from "../components/Logs.vue";
 import Cart from "../components/Cart.vue";
 import Orders from "../components/Orders.vue";
 import Offer from "../components/Offer.vue";
+import Dashboard from "../components/Dashboard.vue";
+import Users from "../components/Users.vue";
+import Cashout from "../components/Cashout.vue";
 import SetOffer from "../components/SetOffer.vue";
 import ProductDetails from "@/components/ProductDetails.vue";
 import OrderDetails from "@/components/OrderDetails.vue";
@@ -72,6 +75,16 @@ const router = createRouter({
       component:Orders,
     },
     {
+      path: "/users",
+      name: "users",
+      component:Users,
+    },
+    {
+      path: "/cashout",
+      name: "cashout",
+      component:Cashout,
+    },
+    {
       path: "/paymentInfo/:id",
       name: "paymentInfo",
       component: PaymentInfo,
@@ -96,6 +109,11 @@ const router = createRouter({
       path: "/:pathMatch(.*)*",
       name: "404",
       component: NotFound,
+    },
+    {
+      path: "/dashboard",
+      name: "dashboard",
+      component:Dashboard,
     },
   ],
 });

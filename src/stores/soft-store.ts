@@ -13,6 +13,7 @@ export const useSoftStore = defineStore("soft-store", () => {
   const user = ref<string>("");
   const isAdmin = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
+  const hasUserLoggedIn = ref<boolean>(false);
   const isAllProductsLoaded = ref<boolean>(false);
   const categoryArr = ref([]as string[]);
   const allProducts = ref([]as any);
@@ -299,7 +300,7 @@ const makePayment = (data : any) => {
   return { 
     projectName, apiUrl, serverPath,clientPath, user, isAdmin, categoryArr, allProducts,_offer,cart,
      offers,logistics, commision, vat,orders, _edit, rawChats,isLoading, paystack_public_key, paystack_secret_key,
-      paystack_url, isAllProductsLoaded,
+      paystack_url, isAllProductsLoaded, hasUserLoggedIn,
        verifyTrans, setTableName, parseCurrency, nairaToKobo, KoboToNaira, getAllCategory, getChats, getAllProducts,getAllOrders, getOffer,getLogistics, getAllOffers, getUserId, create, 
       read, readAll, del, delAll, exists, find,makePayment, encrypt, decrypt, sendEmail
   };
