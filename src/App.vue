@@ -73,7 +73,6 @@ import {useSoftStore} from "./stores/soft-store";
                       <li><RouterLink to="/logistics">Logistics</RouterLink></li>
                       <li><RouterLink to="/customerCare">Customer Care</RouterLink></li>
                       <li><RouterLink to="/data">Login</RouterLink></li>
-                      <!-- <li><RouterLink to="/dashboard">Dashboard</RouterLink></li> -->
                       <li v-if="isAdmin"><RouterLink to="/orders">Orders</RouterLink></li>
                       <li v-if="isAdmin"><RouterLink to="/logs">Logs</RouterLink></li>
                       <li v-if="isAdmin"><RouterLink to="/setOffer">Set Offer</RouterLink></li>
